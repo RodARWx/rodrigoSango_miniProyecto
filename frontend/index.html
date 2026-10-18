@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portal de gestión y consulta de estudiantes con búsqueda en tiempo real">
+    <title>Portal Estudiantes - Consultas y Catálogo</title>
+    <!-- Hoja de estilos con CSS Grid, Flexbox y Media Queries -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Fuente moderna desde Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Barra de Navegación entre Página 1 y Página 2 -->
+    <!-- Barra de Navegación entre Pestañas -->
+    <nav class="barra-navegacion">
+        <div class="nav-contenedor">
+            <span class="logo">Sistema Académico</span>
+            <ul class="nav-enlaces">
+                <li><a href="#consultas" id="tab-consultas" class="activo">Consultas y Búsqueda</a></li>
+                <li><a href="#registro" id="tab-registro">Registrar Estudiante</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Encabezado de la página -->
+    <header class="hero-header">
+        <div class="contenedor">
+            <h1 id="titulo-hero">Catálogo y Consulta de Estudiantes</h1>
+        </div>
+    </header>
+
+    <main class="contenedor principal">
+
+        <!-- Vista 1: Consultas y Búsqueda (Buscador + Catálogo de Tarjetas) -->
+        <div id="vista-consultas" class="vista-pestaña">
+            <!-- Barra de Búsqueda con Sugerencias y Filtros en Servidor -->
+            <section id="seccion-busqueda" class="seccion-busqueda">
+                <div class="buscador-cabecera">
+                    <h2>Consulta de Estudiantes</h2>
+                    <span id="contador-resultados" class="badge-contador">Cargando registros...</span>
+                </div>
+
+                <div class="buscador-envoltura">
+                    <input type="search" id="input-busqueda" placeholder="Escribe para buscar por nombre, curso o correo..."
+                        autocomplete="off" aria-label="Buscar estudiantes">
+                    <!-- Menú flotante de sugerencias en tiempo real -->
+                    <ul id="lista-sugerencias" class="menu-sugerencias" aria-live="polite"></ul>
+                </div>
+
+                <!-- Barra de filtros y ordenamiento en servidor para alta escala -->
+                <div class="barra-filtros">
+                    <div class="filtro-grupo">
+                        <label for="filtro-curso">Filtrar por curso:</label>
+                        <select id="filtro-curso" class="select-filtro" aria-label="Filtrar por curso">
+                            <option value="">Todos los cursos</option>
+                        </select>
+                    </div>
+
+                    <div class="filtro-grupo">
+                        <label for="orden-resultados">Ordenar por:</label>
+                        <select id="orden-resultados" class="select-filtro" aria-label="Ordenar resultados">
+                            <option value="id,desc">Más recientes primero</option>
+                            <option value="nombre,asc">Nombre (A - Z)</option>
+                            <option value="nombre,desc">Nombre (Z - A)</option>
+                            <option value="curso,asc">Curso (A - Z)</option>
+                        </select>
+                    </div>
+
+                    <div class="filtro-grupo">
+                        <label for="tamano-pagina">Tarjetas por página:</label>
+                        <select id="tamano-pagina" class="select-filtro" aria-label="Cantidad por página">
+                            <option value="6">6</option>
+                            <option value="9" selected>9</option>
+                            <option value="12">12</option>
+                            <option value="24">24</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cuadrícula responsiva de Tarjetas y Barra de Paginación -->
+            <section class="seccion-catalogo">
+                <div id="lista-estudiantes" class="grid-tarjetas">
+                    <!-- Inyectado dinámicamente desde app.js -->
+                </div>
+
+                <!-- Paginación dinámica (Server-side) -->
+                <div id="paginacion-contenedor" class="paginacion-barra">
+                    <button id="btn-pagina-anterior" class="btn btn-paginacion" disabled>&laquo; Anterior</button>
+                    <span id="info-paginacion" class="info-paginacion">Página 1 de 1</span>
+                    <button id="btn-pagina-siguiente" class="btn btn-paginacion" disabled>Siguiente &raquo;</button>
+                </div>
+            </section>
+        </div>
+
+        <!-- Vista 2: Formulario de Registro (Oculto en la pestaña de consultas) -->
+        <div id="vista-registro" class="vista-pestaña" style="display: none;">
+            <section id="seccion-formulario" class="tarjeta-panel formulario-panel">
+                <h2>Registrar Nuevo Estudiante</h2>
+                <form id="formulario-estudiante" class="form-cuadricula" novalidate>
+                    <div class="campo">
+                        <label for="nombre">Nombre completo *</label>
+                        <input type="text" id="nombre" name="nombre" placeholder="Ej. Brayan Pérez" autocomplete="name" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+" required>
+                        <span class="mensaje-error" id="error-nombre"></span>
+                    </div>
+
+                    <div class="campo">
+                        <label for="correo">Correo electrónico *</label>
+                        <input type="email" id="correo" name="correo" placeholder="correo@uce.edu.ec" autocomplete="email" required>
+                        <span class="mensaje-error" id="error-correo"></span>
+                    </div>
+
+                    <div class="campo">
+                        <label for="curso">Curso / Paralelo *</label>
+                        <input type="text" id="curso" name="curso" placeholder="Ej. Programación Web 7mo" required>
+                        <span class="mensaje-error" id="error-curso"></span>
+                    </div>
+
+                    <div class="campo campo-completo">
+                        <div class="encabezado-avatar">
+                            <label>Avatar del Estudiante</label>
+                            <span class="subtexto-label">Elige un avatar predeterminado con un clic:</span>
+                        </div>
+                        <div class="selector-avatares" id="selector-avatares-registro" role="radiogroup" aria-label="Seleccionar avatar predeterminado">
+                            <!-- Inyectado dinámicamente con app.js -->
+                        </div>
+                        
+                        <div class="opcion-url-envoltura">
+                            <button type="button" class="btn-link-secundario" id="btn-toggle-url-registro">
+                                + O ingresar URL de imagen personalizada
+                            </button>
+                            <div class="campo-url-toggle" id="wrap-url-registro" style="display: none;">
+                                <input type="url" id="imageUrl" name="imageUrl" placeholder="https://ejemplo.com/foto.jpg">
+                                <span class="mensaje-error" id="error-imageUrl"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="campo campo-completo">
+                        <div class="label-con-contador">
+                            <label for="descripcion">Descripción breve (opcional)</label>
+                            <span class="contador-caracteres" id="contador-descripcion">0 / 500</span>
+                        </div>
+                        <textarea id="descripcion" name="descripcion" maxlength="500" rows="3"
+                            placeholder="Breve perfil o bio del estudiante..."></textarea>
+                        <span class="mensaje-error" id="error-descripcion"></span>
+                    </div>
+
+                    <div class="campo-boton">
+                        <button type="submit" id="btn-guardar" class="btn btn-primario">Registrar Estudiante</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <p>© 2026 Sistema de Estudiantes - Programación Web</p>
+    </footer>
+
+    <!-- Modal de Edición (PUT) -->
+    <div id="modal-edicion" class="modal-envoltura" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+        <div class="modal-backdrop" id="modal-backdrop"></div>
+        <div class="modal-dialogo">
+            <div class="modal-cabecera">
+                <h3 id="modal-titulo">Editar Estudiante</h3>
+                <button type="button" class="btn-cerrar-modal" id="btn-cerrar-modal" aria-label="Cerrar modal">&times;</button>
+            </div>
+            <form id="formulario-edicion" class="modal-cuerpo" novalidate>
+                <input type="hidden" id="edit-id" name="id">
+
+                <div class="campo">
+                    <label for="edit-nombre">Nombre completo *</label>
+                    <input type="text" id="edit-nombre" name="nombre" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+" required>
+                    <span class="mensaje-error" id="error-edit-nombre"></span>
+                </div>
+
+                <div class="campo">
+                    <label for="edit-correo">Correo electrónico *</label>
+                    <input type="email" id="edit-correo" name="correo" required>
+                    <span class="mensaje-error" id="error-edit-correo"></span>
+                </div>
+
+                <div class="campo campo-completo">
+                    <label for="edit-curso">Curso / Paralelo *</label>
+                    <input type="text" id="edit-curso" name="curso" required>
+                    <span class="mensaje-error" id="error-edit-curso"></span>
+                </div>
+
+                <div class="campo campo-completo">
+                    <div class="encabezado-avatar">
+                        <label>Avatar del Estudiante</label>
+                        <span class="subtexto-label">Elige un avatar predeterminado con un clic:</span>
+                    </div>
+                    <div class="selector-avatares" id="selector-avatares-edicion" role="radiogroup" aria-label="Seleccionar avatar de edición">
+                        <!-- Inyectado dinámicamente con app.js -->
+                    </div>
+
+                    <div class="opcion-url-envoltura">
+                        <button type="button" class="btn-link-secundario" id="btn-toggle-url-edicion">
+                            + O ingresar URL de imagen personalizada
+                        </button>
+                        <div class="campo-url-toggle" id="wrap-url-edicion" style="display: none;">
+                            <input type="url" id="edit-imageUrl" name="imageUrl" placeholder="https://ejemplo.com/foto.jpg">
+                            <span class="mensaje-error" id="error-edit-imageUrl"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="campo campo-completo">
+                    <div class="label-con-contador">
+                        <label for="edit-descripcion">Descripción breve</label>
+                        <span class="contador-caracteres" id="contador-edit-descripcion">0 / 500</span>
+                    </div>
+                    <textarea id="edit-descripcion" name="descripcion" maxlength="500" rows="3"
+                        placeholder="Breve perfil o bio del estudiante..."></textarea>
+                    <span class="mensaje-error" id="error-edit-descripcion"></span>
+                </div>
+
+                <div class="modal-acciones">
+                    <button type="button" class="btn btn-secundario" id="btn-cancelar-edicion">Cancelar</button>
+                    <button type="submit" class="btn btn-primario" id="btn-guardar-edicion">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Archivo JS para la lógica que desarrollarás -->
+    <script src="app.js"></script>
+</body>
+
+</html>

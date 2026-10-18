@@ -1,0 +1,887 @@
+/* ==========================================================================
+   SISTEMA DE DISEÑO RESPONSIVO (CSS GRID, FLEXBOX & MEDIA QUERIES)
+   ========================================================================== */
+
+:root {
+    --color-primario: #2563eb;
+    --color-primario-hover: #1d4ed8;
+    --color-fondo: #f8fafc;
+    --color-tarjeta: #ffffff;
+    --color-texto: #1e293b;
+    --color-texto-mutado: #64748b;
+    --color-borde: #e2e8f0;
+    --color-peligro: #ef4444;
+    --color-peligro-hover: #dc2626;
+    --color-exito: #10b981;
+    --sombra-suave: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    --sombra-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+    --radio-borde: 12px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ==========================================================================
+   NAVEGACIÓN (FLEXBOX)
+   ========================================================================== */
+.barra-navegacion {
+    background-color: #0f172a;
+    color: white;
+    padding: 0.85rem 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-contenedor {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.logo {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.nav-enlaces {
+    list-style: none;
+    display: flex;
+    gap: 0.8rem;
+}
+
+.nav-enlaces a {
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.nav-enlaces a:hover,
+.nav-enlaces a.activo {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ==========================================================================
+   HERO / ENCABEZADO
+   ========================================================================== */
+.hero-header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    color: white;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+}
+
+.hero-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.hero-header p {
+    font-size: 1rem;
+    opacity: 0.9;
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+/* ==========================================================================
+   CONTENEDOR PRINCIPAL
+   ========================================================================== */
+.contenedor {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    width: 100%;
+}
+
+.principal {
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+    flex: 1;
+}
+
+/* ==========================================================================
+   SISTEMA DE PESTAÑAS (SPA)
+   ========================================================================== */
+.vista-pestaña {
+    width: 100%;
+    animation: aparecerPestaña 0.25s ease-out;
+}
+
+@keyframes aparecerPestaña {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==========================================================================
+   FORMULARIO (CSS GRID Y FLEXBOX)
+   ========================================================================== */
+.tarjeta-panel {
+    background-color: var(--color-tarjeta);
+    border-radius: var(--radio-borde);
+    padding: 1.8rem;
+    box-shadow: var(--sombra-suave);
+    border: 1px solid var(--color-borde);
+    margin-bottom: 2rem;
+}
+
+.formulario-panel h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1.2rem;
+    color: var(--color-texto);
+}
+
+.form-cuadricula {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.2rem;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.campo-completo {
+    grid-column: 1 / -1;
+}
+
+.campo label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-texto-mutado);
+}
+
+.campo input,
+.campo textarea {
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--color-borde);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    outline: none;
+    font-family: inherit;
+    background-color: white;
+    transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+.campo textarea {
+    resize: vertical;
+    min-height: 75px;
+    line-height: 1.4;
+}
+
+.campo input:focus,
+.campo textarea:focus {
+    border-color: var(--color-primario);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* Estados de validación visual */
+.campo input.campo-invalido,
+.campo textarea.campo-invalido {
+    border-color: var(--color-peligro);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+    background-color: #fffafb;
+}
+
+.campo input.campo-valido,
+.campo textarea.campo-valido {
+    border-color: var(--color-exito);
+}
+
+.mensaje-error {
+    color: var(--color-peligro);
+    font-size: 0.78rem;
+    font-weight: 500;
+    min-height: 1.1rem;
+    display: block;
+    margin-top: 0.1rem;
+}
+
+.label-con-contador {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.contador-caracteres {
+    font-size: 0.75rem;
+    color: var(--color-texto-mutado);
+    font-weight: 500;
+}
+
+/* ==========================================================================
+   CATÁLOGO DE AVATARES PREDETERMINADOS
+   ========================================================================== */
+.encabezado-avatar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    margin-bottom: 0.4rem;
+}
+
+.subtexto-label {
+    font-size: 0.78rem;
+    color: var(--color-texto-mutado);
+}
+
+.selector-avatares {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0.6rem 0.2rem;
+}
+
+.avatar-opcion {
+    width: 58px;
+    height: 58px;
+    border-radius: 10px;
+    border: 2px solid var(--color-borde);
+    cursor: pointer;
+    background-color: #f8fafc;
+    padding: 3px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    user-select: none;
+}
+
+.avatar-opcion img {
+    width: 100%;
+    height: 100%;
+    border-radius: 7px;
+    object-fit: cover;
+    display: block;
+}
+
+.avatar-opcion:hover {
+    transform: translateY(-2px) scale(1.06);
+    border-color: #93c5fd;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+}
+
+.avatar-opcion.seleccionado {
+    border-color: var(--color-primario);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.28);
+    background-color: #eff6ff;
+    transform: translateY(-2px) scale(1.06);
+}
+
+.opcion-url-envoltura {
+    margin-top: 0.4rem;
+}
+
+.btn-link-secundario {
+    background: transparent;
+    border: none;
+    color: var(--color-primario);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0.2rem 0;
+    transition: color 0.15s ease;
+}
+
+.btn-link-secundario:hover {
+    color: var(--color-primario-hover);
+}
+
+.campo-url-toggle {
+    margin-top: 0.6rem;
+    animation: aparecerPestaña 0.2s ease-out;
+}
+
+.campo-boton {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn {
+    padding: 0.75rem 1.6rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.btn-primario {
+    background-color: var(--color-primario);
+    color: white;
+}
+
+.btn-primario:hover {
+    background-color: var(--color-primario-hover);
+    transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   SECCIÓN DE BÚSQUEDA Y SUGERENCIAS (FLEXBOX & POSITION ABSOLUTE)
+   ========================================================================== */
+.seccion-busqueda {
+    margin-bottom: 2rem;
+}
+
+.buscador-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+}
+
+.badge-contador {
+    background-color: #e0e7ff;
+    color: #3730a3;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+}
+
+.buscador-envoltura {
+    position: relative;
+    width: 100%;
+}
+
+#input-busqueda {
+    width: 100%;
+    padding: 0.9rem 1.2rem;
+    font-size: 1rem;
+    border: 2px solid var(--color-borde);
+    border-radius: 10px;
+    background-color: white;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+#input-busqueda:focus {
+    border-color: var(--color-primario);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+/* Menú flotante de sugerencias en tiempo real */
+.menu-sugerencias {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid var(--color-borde);
+    border-radius: 10px;
+    list-style: none;
+    max-height: 250px;
+    overflow-y: auto;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    display: none; /* Se activa con JS cuando hay resultados */
+}
+
+.menu-sugerencias.abierto {
+    display: block;
+}
+
+.sugerencia-item {
+    padding: 0.75rem 1.2rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.9rem;
+    transition: background-color 0.15s;
+}
+
+.sugerencia-item:last-child {
+    border-bottom: none;
+}
+
+.sugerencia-item:hover {
+    background-color: #f8fafc;
+    color: var(--color-primario);
+}
+
+.sugerencia-item small {
+    color: var(--color-texto-mutado);
+    font-size: 0.8rem;
+}
+
+.sugerencia-item strong {
+    color: var(--color-primario);
+    font-weight: 700;
+}
+
+/* ==========================================================================
+   BARRA DE FILTROS Y ORDENAMIENTO (SERVER-SIDE)
+   ========================================================================== */
+.barra-filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding: 0.85rem 1.1rem;
+    background-color: white;
+    border: 1px solid var(--color-borde);
+    border-radius: 10px;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.filtro-grupo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1 1 200px;
+}
+
+.filtro-grupo label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-texto-mutado);
+    white-space: nowrap;
+}
+
+.select-filtro {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    border: 1px solid var(--color-borde);
+    background-color: #f8fafc;
+    font-size: 0.85rem;
+    color: var(--color-texto);
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.select-filtro:focus {
+    border-color: var(--color-primario);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    background-color: white;
+}
+
+/* ==========================================================================
+   CUADRÍCULA DE TARJETAS (CSS GRID RESPONSIVO)
+   ========================================================================== */
+.grid-tarjetas {
+    display: grid;
+    /* Responsive automático con ancho cómodo para el formato tipo credencial */
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Tarjeta individual */
+.tarjeta-estudiante {
+    background-color: var(--color-tarjeta);
+    border-radius: var(--radio-borde);
+    border: 1px solid var(--color-borde);
+    box-shadow: var(--sombra-suave);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 1.35rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.tarjeta-estudiante:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--sombra-hover);
+    border-color: #cbd5e1;
+}
+
+/* Sección superior: Foto a la izquierda, Información a la derecha */
+.tarjeta-superior {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    width: 100%;
+    margin-bottom: 0.9rem;
+}
+
+/* Contenedor de la foto rectangular (tipo carnet / ID) */
+.tarjeta-foto-contenedor {
+    flex-shrink: 0;
+    width: 88px;
+    height: 98px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid var(--color-borde);
+    background-color: #f1f5f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.tarjeta-foto-contenedor img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Bloque derecho: Nombre, Curso y Correo alineados */
+.tarjeta-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.tarjeta-info h3,
+.tarjeta-nombre {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-texto);
+    margin-bottom: 0.35rem;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.tarjeta-info .curso-badge {
+    display: inline-block;
+    background-color: #eff6ff;
+    color: var(--color-primario);
+    border: 1px solid #bfdbfe;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    margin-bottom: 0.35rem;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tarjeta-info .correo-texto {
+    font-size: 0.8rem;
+    color: var(--color-texto-mutado);
+    word-break: break-all;
+    line-height: 1.3;
+}
+
+/* Sección inferior: Descripción a ancho completo */
+.tarjeta-cuerpo {
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+}
+
+.tarjeta-desc {
+    font-size: 0.85rem;
+    color: #475569;
+    line-height: 1.45;
+    background-color: #f8fafc;
+    border: 1px solid #f1f5f9;
+    padding: 0.75rem 0.85rem;
+    border-radius: 8px;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 0.9rem;
+}
+
+/* Botones de acciones en la tarjeta */
+.tarjeta-acciones {
+    width: 100%;
+    margin-top: auto;
+    display: flex;
+    gap: 0.6rem;
+}
+
+.btn-editar {
+    flex: 1;
+    padding: 0.55rem;
+    background-color: #eff6ff;
+    color: var(--color-primario);
+    font-weight: 600;
+    font-size: 0.85rem;
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-editar:hover {
+    background-color: var(--color-primario);
+    color: white;
+}
+
+.btn-eliminar {
+    flex: 1;
+    padding: 0.55rem;
+    background-color: #fee2e2;
+    color: var(--color-peligro);
+    font-weight: 600;
+    font-size: 0.85rem;
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-eliminar:hover {
+    background-color: var(--color-peligro);
+    color: white;
+}
+
+/* ==========================================================================
+   BARRA DE PAGINACIÓN (SERVER-SIDE)
+   ========================================================================== */
+.paginacion-barra {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.2rem;
+    margin-top: 2rem;
+    padding: 0.9rem 1.2rem;
+    background-color: white;
+    border-radius: var(--radio-borde);
+    border: 1px solid var(--color-borde);
+    box-shadow: var(--sombra-suave);
+}
+
+.btn-paginacion {
+    padding: 0.55rem 1.2rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    border-radius: 8px;
+    background-color: #f1f5f9;
+    color: var(--color-texto);
+    border: 1px solid var(--color-borde);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-paginacion:hover:not(:disabled) {
+    background-color: var(--color-primario);
+    color: white;
+    border-color: var(--color-primario);
+    transform: translateY(-1px);
+}
+
+.btn-paginacion:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.info-paginacion {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #475569;
+}
+
+/* Estado vacío / sin resultados */
+.sin-resultados {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem 1rem;
+    background: white;
+    border-radius: var(--radio-borde);
+    border: 1px dashed var(--color-borde);
+    color: var(--color-texto-mutado);
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+.footer {
+    background-color: #0f172a;
+    color: #94a3b8;
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 0.85rem;
+    margin-top: auto;
+}
+
+/* ==========================================================================
+   MODAL DE EDICIÓN (PUT)
+   ========================================================================== */
+.modal-envoltura {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    animation: fadeInModal 0.2s ease-out;
+}
+
+.modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+}
+
+.modal-dialogo {
+    position: relative;
+    background-color: white;
+    width: 100%;
+    max-width: 580px;
+    border-radius: var(--radio-borde);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--color-borde);
+    overflow: hidden;
+    z-index: 10;
+    animation: zoomInModal 0.25s ease-out;
+}
+
+.modal-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.1rem 1.4rem;
+    border-bottom: 1px solid var(--color-borde);
+    background-color: #f8fafc;
+}
+
+.modal-cabecera h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-texto);
+}
+
+.btn-cerrar-modal {
+    background: transparent;
+    border: none;
+    font-size: 1.6rem;
+    line-height: 1;
+    color: var(--color-texto-mutado);
+    cursor: pointer;
+    transition: color 0.15s ease;
+}
+
+.btn-cerrar-modal:hover {
+    color: var(--color-peligro);
+}
+
+.modal-cuerpo {
+    padding: 1.4rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.modal-acciones {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.8rem;
+    margin-top: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-borde);
+}
+
+.btn-secundario {
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid var(--color-borde);
+}
+
+.btn-secundario:hover {
+    background-color: #e2e8f0;
+    color: var(--color-texto);
+}
+
+@keyframes fadeInModal {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes zoomInModal {
+    from {
+        opacity: 0;
+        transform: scale(0.96) translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* ==========================================================================
+   MEDIA QUERIES (RESPONSIVE DESIGN)
+   ========================================================================== */
+@media (max-width: 768px) {
+    .hero-header h1 {
+        font-size: 1.6rem;
+    }
+
+    .form-cuadricula {
+        grid-template-columns: 1fr;
+    }
+
+    .campo-boton {
+        justify-content: stretch;
+    }
+
+    .campo-boton button {
+        width: 100%;
+    }
+
+    .nav-contenedor {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .nav-enlaces {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .grid-tarjetas {
+        grid-template-columns: 1fr; /* Una sola columna en teléfonos móviles */
+    }
+
+    .tarjeta-panel {
+        padding: 1.2rem;
+    }
+}
+
