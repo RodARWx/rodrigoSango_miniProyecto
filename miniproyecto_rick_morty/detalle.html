@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Información detallada y episodios del personaje de Rick and Morty con soporte de base de datos">
+    <title>Detalle del Personaje - Rick and Morty</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Barra de Navegación -->
+    <nav class="barra-navegacion">
+        <div class="nav-contenedor">
+            <div class="marca-contenedor">
+                <span class="logo">PORTAL RICK & MORTY</span>
+                <span id="badge-servidor" class="badge-servidor" title="Estado de la Base de Datos">
+                    <span class="punto-servidor"></span>
+                    <span id="texto-servidor">Conectando...</span>
+                </span>
+            </div>
+            <ul class="nav-enlaces">
+                <li><a href="index.html" class="nav-link">&larr; Volver al Catálogo</a></li>
+                <li><a href="https://rickandmortyapi.com/documentation" target="_blank" rel="noopener noreferrer" class="nav-link-externo">3 Endpoints API ↗</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Encabezado Hero -->
+    <header class="hero-header hero-detalle">
+        <div class="contenedor">
+            <a href="index.html" class="btn-volver">&larr; Volver al listado de personajes</a>
+            <h1 id="detalle-nombre">Cargando información...</h1>
+            <p id="detalle-subtitulo">Consultando Endpoint 2 (Ficha de Personaje) y Endpoint 3 (Episodios)</p>
+        </div>
+    </header>
+
+    <main class="contenedor principal">
+
+        <!-- Contenedor del Detalle Completo -->
+        <div id="contenedor-detalle" class="vista-detalle">
+            
+            <!-- Círculo de carga natural (Spinner rotatorio animado) -->
+            <div id="cargando-detalle" class="estado-mensaje">
+                <div class="spinner"></div>
+                <p>Consultando Endpoint 2 y Endpoint 3 de la API...</p>
+            </div>
+
+            <!-- Ficha Técnica (Inyectada con detalle.js) -->
+            <div id="ficha-tecnica" class="ficha-tecnica" style="display: none;">
+                
+                <!-- Columna Izquierda: Retrato, Estado y Acción de Base de Datos -->
+                <div class="ficha-foto-columna">
+                    <div class="ficha-foto-envoltura">
+                        <img id="personaje-foto" src="" alt="Retrato del personaje">
+                        <div id="personaje-estado-badge" class="estado-flotante">Estado</div>
+                    </div>
+
+                    <!-- Botón de persistencia en PostgreSQL -->
+                    <div class="ficha-accion-favorito">
+                        <button type="button" id="btn-toggle-favorito" class="btn btn-favorito-detalle">
+                            <span id="icono-favorito-detalle">⭐</span>
+                            <span id="texto-favorito-detalle">Guardar en Favoritos (BD)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Columna Derecha: Especificaciones Técnicas (Endpoint 2: /api/character/{id}) -->
+                <div class="ficha-info-columna">
+                    <div class="ficha-titulo-envoltura">
+                        <h2 id="personaje-nombre-h2">Nombre</h2>
+                        <span class="badge-endpoint">Endpoint 2: /api/character/:id</span>
+                    </div>
+                    
+                    <div class="datos-grilla">
+                        <div class="dato-item">
+                            <span class="dato-etiqueta">Especie:</span>
+                            <span id="personaje-especie" class="dato-valor">-</span>
+                        </div>
+
+                        <div class="dato-item">
+                            <span class="dato-etiqueta">Género:</span>
+                            <span id="personaje-genero" class="dato-valor">-</span>
+                        </div>
+
+                        <div class="dato-item">
+                            <span class="dato-etiqueta">Tipo / Sub-especie:</span>
+                            <span id="personaje-tipo" class="dato-valor">Ninguno</span>
+                        </div>
+
+                        <div class="dato-item">
+                            <span class="dato-etiqueta">Planeta / Origen:</span>
+                            <span id="personaje-origen" class="dato-valor">-</span>
+                        </div>
+
+                        <div class="dato-item">
+                            <span class="dato-etiqueta">Ubicación actual:</span>
+                            <span id="personaje-ubicacion" class="dato-valor">-</span>
+                        </div>
+
+                        <div class="dato-item">
+                            <span class="dato-etiqueta">Total de apariciones:</span>
+                            <span id="personaje-total-episodios" class="dato-valor">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de Episodios (Endpoint 3: /api/episode/{ids}) -->
+            <section id="seccion-episodios" class="seccion-episodios" style="display: none;">
+                <div class="episodios-cabecera">
+                    <div>
+                        <h3>Episodios en los que participa</h3>
+                        <span class="badge-endpoint">Endpoint 3: /api/episode/:ids</span>
+                    </div>
+                    <span id="contador-episodios" class="badge-contador">Cargando episodios...</span>
+                </div>
+
+                <div id="lista-episodios" class="grilla-episodios">
+                    <!-- Inyectado dinámicamente con detalle.js -->
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- Contenedor de notificaciones Toast -->
+    <div id="toast-contenedor" class="toast-contenedor" aria-live="polite"></div>
+
+    <footer class="footer">
+        <p>© 2026 Proyecto Full-Stack Rick and Morty | Consumo de 3 Endpoints API + Backend con PostgreSQL</p>
+    </footer>
+
+    <script src="detalle.js"></script>
+</body>
+
+</html>
