@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Portal Full-Stack de Rick and Morty con consumo de 3 endpoints de API externa y persistencia en PostgreSQL">
-    <title>Explorador Rick and Morty - API & PostgreSQL</title>
+    <meta name="description" content="Portal de Rick and Morty con consumo de la API pública oficial y almacenamiento local en el navegador">
+    <title>Explorador Rick and Morty</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,15 +19,11 @@
         <div class="nav-contenedor">
             <div class="marca-contenedor">
                 <span class="logo">PORTAL RICK & MORTY</span>
-                <span id="badge-servidor" class="badge-servidor" title="Estado de la Base de Datos">
-                    <span class="punto-servidor"></span>
-                    <span id="texto-servidor">Conectando...</span>
-                </span>
             </div>
             <ul class="nav-enlaces">
-                <li><button type="button" id="nav-btn-catalogo" class="nav-link activo">🌐 Catálogo API</button></li>
+                <li><button type="button" id="nav-btn-catalogo" class="nav-link activo">🌐 Catálogo</button></li>
                 <li><button type="button" id="nav-btn-favoritos" class="nav-link">⭐ Mis Favoritos (<span id="contador-nav-fav">0</span>)</button></li>
-                <li><a href="https://rickandmortyapi.com/documentation" target="_blank" rel="noopener noreferrer" class="nav-link-externo">3 Endpoints API ↗</a></li>
+                <li><a href="https://rickandmortyapi.com/documentation" target="_blank" rel="noopener noreferrer" class="nav-link-externo">Documentación API ↗</a></li>
             </ul>
         </div>
     </nav>
@@ -36,7 +32,7 @@
     <header class="hero-header">
         <div class="contenedor">
             <h1>Explorador del Multiverso</h1>
-            <p>Plataforma Full-Stack con consumo de 3 endpoints oficiales de la API de Rick & Morty y persistencia en Base de Datos PostgreSQL</p>
+            <p>Plataforma interactiva para consultar personajes y episodios del universo de Rick & Morty</p>
         </div>
     </header>
 
@@ -51,13 +47,13 @@
                     <rect x="14" y="14" width="7" height="7"></rect>
                     <rect x="3" y="14" width="7" height="7"></rect>
                 </svg>
-                <span>Catálogo de Personajes (API)</span>
+                <span>Catálogo de Personajes</span>
             </button>
             <button type="button" id="tab-favoritos" class="tab-item">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                 </svg>
-                <span>Favoritos en Base de Datos (<strong id="conteo-tab-fav">0</strong>)</span>
+                <span>Mis Favoritos (<strong id="conteo-tab-fav">0</strong>)</span>
             </button>
         </div>
 
@@ -132,7 +128,7 @@
     <div id="toast-contenedor" class="toast-contenedor" aria-live="polite"></div>
 
     <footer class="footer">
-        <p>© 2026 Proyecto Full-Stack Rick and Morty | Consumo de 3 Endpoints API + Backend con PostgreSQL</p>
+        <p>© 2026 Portal Rick and Morty | Aplicación Web Client-Side (Vanilla JS & localStorage)</p>
     </footer>
 
     <script src="app.js"></script>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Información detallada y episodios del personaje de Rick and Morty con soporte de base de datos">
+    <meta name="description" content="Información detallada y episodios del personaje de Rick and Morty">
     <title>Detalle del Personaje - Rick and Morty</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,14 +19,10 @@
         <div class="nav-contenedor">
             <div class="marca-contenedor">
                 <span class="logo">PORTAL RICK & MORTY</span>
-                <span id="badge-servidor" class="badge-servidor" title="Estado de la Base de Datos">
-                    <span class="punto-servidor"></span>
-                    <span id="texto-servidor">Conectando...</span>
-                </span>
             </div>
             <ul class="nav-enlaces">
                 <li><a href="index.html" class="nav-link">&larr; Volver al Catálogo</a></li>
-                <li><a href="https://rickandmortyapi.com/documentation" target="_blank" rel="noopener noreferrer" class="nav-link-externo">3 Endpoints API ↗</a></li>
+                <li><a href="https://rickandmortyapi.com/documentation" target="_blank" rel="noopener noreferrer" class="nav-link-externo">Documentación API ↗</a></li>
             </ul>
         </div>
     </nav>
@@ -36,7 +32,7 @@
         <div class="contenedor">
             <a href="index.html" class="btn-volver">&larr; Volver al listado de personajes</a>
             <h1 id="detalle-nombre">Cargando información...</h1>
-            <p id="detalle-subtitulo">Consultando Endpoint 2 (Ficha de Personaje) y Endpoint 3 (Episodios)</p>
+            <p id="detalle-subtitulo">Ficha técnica detallada e historial de episodios</p>
         </div>
     </header>
 
@@ -61,11 +57,11 @@
                         <div id="personaje-estado-badge" class="estado-flotante">Estado</div>
                     </div>
 
-                    <!-- Botón de persistencia en PostgreSQL -->
+                    <!-- Botón de favoritos (localStorage) -->
                     <div class="ficha-accion-favorito">
                         <button type="button" id="btn-toggle-favorito" class="btn btn-favorito-detalle">
                             <span id="icono-favorito-detalle">⭐</span>
-                            <span id="texto-favorito-detalle">Guardar en Favoritos (BD)</span>
+                            <span id="texto-favorito-detalle">Guardar en Favoritos</span>
                         </button>
                     </div>
                 </div>
@@ -133,7 +129,7 @@
     <div id="toast-contenedor" class="toast-contenedor" aria-live="polite"></div>
 
     <footer class="footer">
-        <p>© 2026 Proyecto Full-Stack Rick and Morty | Consumo de 3 Endpoints API + Backend con PostgreSQL</p>
+        <p>© 2026 Portal Rick and Morty | Aplicación Web Client-Side (Vanilla JS & localStorage)</p>
     </footer>
 
     <script src="detalle.js"></script>

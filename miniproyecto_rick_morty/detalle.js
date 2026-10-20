@@ -1,18 +1,18 @@
 // ==========================================================================
-// VISTA DE DETALLE - FRONTEND FULL-STACK (VANILLA JS)
-// Consumo exclusivo de ENDPOINT 2 (Personaje) y ENDPOINT 3 (Episodios)
-// + Persistencia en Base de Datos PostgreSQL
+// VISTA DE DETALLE - FRONTEND CLIENT-SIDE (VANILLA JS PURO)
+// Consumo directo de ENDPOINT 2 (Personaje) y ENDPOINT 3 (Episodios)
+// + Persistencia en localStorage
 // ==========================================================================
 
 const API_BASE = 'https://rickandmortyapi.com/api';
-const BACKEND_API = '/api';
+const STORAGE_KEY_FAVORITOS = 'rick_morty_favoritos';
 
 // Obtener el ID del personaje desde la URL (?id=...)
 const urlParams = new URLSearchParams(window.location.search);
 const personajeId = urlParams.get('id');
 
 let datosPersonajeActual = null;
-let esFavoritoEnBD = false;
+let esFavoritoLocal = false;
 
 // Elementos del DOM
 const detalleNombre = document.getElementById('detalle-nombre');
@@ -37,94 +37,80 @@ const textoFavoritoDetalle = document.getElementById('texto-favorito-detalle');
 
 const listaEpisodios = document.getElementById('lista-episodios');
 const contadorEpisodios = document.getElementById('contador-episodios');
-
-const badgeServidor = document.getElementById('badge-servidor');
-const textoServidor = document.getElementById('texto-servidor');
 const toastContenedor = document.getElementById('toast-contenedor');
 
 // ==========================================================================
-// 1. ESTADO DEL BACKEND Y VERIFICACIÓN EN POSTGRESQL
+// 1. GESTOR DE FAVORITOS EN LOCALSTORAGE
 // ==========================================================================
-async function verificarEstadoBackend() {
-    try {
-        const respuesta = await fetch(`${BACKEND_API}/stats`);
-        if (!respuesta.ok) throw new Error('Servidor offline');
-        const data = await respuesta.json();
 
-        if (data.postgresConectado) {
-            textoServidor.textContent = '🐘 PostgreSQL Activo';
-            badgeServidor.className = 'badge-servidor';
-        } else {
-            textoServidor.textContent = '⚡ BD Local Activa';
-            badgeServidor.className = 'badge-servidor';
-        }
-    } catch {
-        textoServidor.textContent = '⚠️ Modo Estático';
-        badgeServidor.className = 'badge-servidor desconectado';
+function obtenerFavoritosStorage() {
+    try {
+        const data = localStorage.getItem(STORAGE_KEY_FAVORITOS);
+        return data ? JSON.parse(data) : [];
+    } catch (error) {
+        console.error('Error al leer favoritos desde localStorage:', error);
+        return [];
     }
 }
 
-async function verificarFavoritoEnBD(id) {
-    if (!id) return;
+function guardarFavoritosStorage(favoritos) {
     try {
-        const res = await fetch(`${BACKEND_API}/favoritos/check/${id}`);
-        if (!res.ok) return;
-        const data = await res.json();
-        esFavoritoEnBD = !!data.esFavorito;
-        actualizarBotonFavorito();
-    } catch (err) {
-        console.warn('No se pudo verificar favorito en backend:', err);
+        localStorage.setItem(STORAGE_KEY_FAVORITOS, JSON.stringify(favoritos));
+    } catch (error) {
+        console.error('Error al guardar favoritos en localStorage:', error);
+        mostrarToast('Error de almacenamiento en el navegador', 'eliminar');
     }
+}
+
+function verificarFavoritoLocal(id) {
+    if (!id) return;
+    const favoritos = obtenerFavoritosStorage();
+    esFavoritoLocal = favoritos.some(item => Number(item.id) === Number(id));
+    actualizarBotonFavorito();
 }
 
 function actualizarBotonFavorito() {
     if (!btnToggleFavorito) return;
-    if (esFavoritoEnBD) {
+    if (esFavoritoLocal) {
         btnToggleFavorito.classList.add('es-favorito');
         iconoFavoritoDetalle.textContent = '★';
-        textoFavoritoDetalle.textContent = 'Guardado en PostgreSQL (Eliminar)';
+        textoFavoritoDetalle.textContent = 'Guardado en Favoritos (Eliminar)';
     } else {
         btnToggleFavorito.classList.remove('es-favorito');
         iconoFavoritoDetalle.textContent = '☆';
-        textoFavoritoDetalle.textContent = 'Guardar en Favoritos (PostgreSQL)';
+        textoFavoritoDetalle.textContent = 'Guardar en Favoritos';
     }
 }
 
-async function alternarFavorito() {
+function alternarFavorito() {
     if (!datosPersonajeActual) return;
-    const id = datosPersonajeActual.id;
+    const id = Number(datosPersonajeActual.id);
+    let favoritos = obtenerFavoritosStorage();
+    const indice = favoritos.findIndex(f => Number(f.id) === id);
 
-    try {
-        if (esFavoritoEnBD) {
-            // Eliminar de BD
-            const res = await fetch(`${BACKEND_API}/favoritos/${id}`, { method: 'DELETE' });
-            if (!res.ok) throw new Error('Error al eliminar');
-            esFavoritoEnBD = false;
-            actualizarBotonFavorito();
-            mostrarToast(`"${datosPersonajeActual.name}" eliminado de la Base de Datos`, 'eliminar');
-        } else {
-            // Guardar en BD
-            const res = await fetch(`${BACKEND_API}/favoritos`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    id: datosPersonajeActual.id,
-                    nombre: datosPersonajeActual.name,
-                    estado: datosPersonajeActual.status,
-                    especie: datosPersonajeActual.species,
-                    genero: datosPersonajeActual.gender,
-                    imagen: datosPersonajeActual.image,
-                    origen: datosPersonajeActual.origin?.name || 'Desconocido'
-                })
-            });
-            if (!res.ok) throw new Error('Error al guardar');
-            esFavoritoEnBD = true;
-            actualizarBotonFavorito();
-            mostrarToast(`⭐ "${datosPersonajeActual.name}" guardado en PostgreSQL`, 'exito');
-        }
-    } catch (err) {
-        console.error('Error al alternar favorito:', err);
-        mostrarToast('Error al conectar con la base de datos', 'eliminar');
+    if (indice !== -1) {
+        favoritos.splice(indice, 1);
+        guardarFavoritosStorage(favoritos);
+        esFavoritoLocal = false;
+        actualizarBotonFavorito();
+        mostrarToast(`"${datosPersonajeActual.name}" eliminado de Favoritos`, 'eliminar');
+    } else {
+        const nuevoFavorito = {
+            id,
+            nombre: datosPersonajeActual.name,
+            estado: datosPersonajeActual.status || 'unknown',
+            especie: datosPersonajeActual.species || 'Desconocida',
+            genero: datosPersonajeActual.gender || 'unknown',
+            imagen: datosPersonajeActual.image,
+            origen: datosPersonajeActual.origin?.name || 'Desconocido',
+            fechaGuardado: new Date().toISOString()
+        };
+
+        favoritos.unshift(nuevoFavorito);
+        guardarFavoritosStorage(favoritos);
+        esFavoritoLocal = true;
+        actualizarBotonFavorito();
+        mostrarToast(`⭐ "${datosPersonajeActual.name}" guardado en Favoritos`, 'exito');
     }
 }
 
@@ -135,6 +121,7 @@ if (btnToggleFavorito) {
 // ==========================================================================
 // 2. CARGA DE DETALLES DEL PERSONAJE (ENDPOINT 2: GET /api/character/{id})
 // ==========================================================================
+
 async function cargarDetallePersonaje() {
     if (!personajeId) {
         mostrarError('No se especificó un identificador de personaje válido.');
@@ -142,7 +129,7 @@ async function cargarDetallePersonaje() {
     }
 
     try {
-        // LLAMADA EXCLUSIVA AL ENDPOINT 2 DE LA API EXTERNA
+        // LLAMADA DIRECTA AL ENDPOINT 2 DE LA API EXTERNA
         const res = await fetch(`${API_BASE}/character/${personajeId}`);
         if (!res.ok) {
             throw new Error(`Personaje no encontrado (HTTP ${res.status})`);
@@ -152,10 +139,10 @@ async function cargarDetallePersonaje() {
         datosPersonajeActual = personaje;
         renderizarFichaTecnica(personaje);
 
-        // Verificar si este personaje ya está en la Base de Datos
-        verificarFavoritoEnBD(personaje.id);
+        // Verificar si este personaje ya está en favoritos de localStorage
+        verificarFavoritoLocal(personaje.id);
 
-        // LLAMADA EXCLUSIVA AL ENDPOINT 3 para consultar la lista de episodios
+        // LLAMADA AL ENDPOINT 3 para consultar la lista de episodios
         if (personaje.episode && personaje.episode.length > 0) {
             cargarEpisodios(personaje.episode);
         } else {
@@ -173,10 +160,11 @@ async function cargarDetallePersonaje() {
 // ==========================================================================
 // 3. RENDERIZADO DE LA FICHA TÉCNICA
 // ==========================================================================
+
 function renderizarFichaTecnica(personaje) {
     document.title = `${personaje.name} - Detalle del Personaje`;
     detalleNombre.textContent = personaje.name;
-    detalleSubtitulo.textContent = `Ficha técnica detallada e historial de episodios en el multiverso`;
+    detalleSubtitulo.textContent = 'Ficha técnica detallada e historial de episodios en el multiverso';
 
     personajeFoto.src = personaje.image;
     personajeFoto.alt = `Retrato de ${personaje.name}`;
@@ -210,13 +198,14 @@ function renderizarFichaTecnica(personaje) {
 // ==========================================================================
 // 4. CONSULTA DE EPISODIOS (ENDPOINT 3: GET /api/episode/{ids})
 // ==========================================================================
+
 async function cargarEpisodios(urlsEpisodios) {
     seccionEpisodios.style.display = 'block';
     contadorEpisodios.textContent = 'Consultando episodios...';
     listaEpisodios.innerHTML = `
         <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
             <div class="spinner"></div>
-            <p style="color: #94a3b8; font-size: 0.9rem;">Obteniendo información desde el Endpoint 3 (/api/episode/:ids)...</p>
+            <p style="color: #94a3b8; font-size: 0.9rem;">Obteniendo información de episodios desde la API...</p>
         </div>
     `;
 
@@ -228,7 +217,7 @@ async function cargarEpisodios(urlsEpisodios) {
 
         if (ids.length === 0) return;
 
-        // LLAMADA EXCLUSIVA AL ENDPOINT 3: consulta múltiple por IDs separados por coma
+        // LLAMADA DIRECTA AL ENDPOINT 3: consulta múltiple por IDs separados por coma
         const endpointUrl = `${API_BASE}/episode/${ids.join(',')}`;
         const respuesta = await fetch(endpointUrl);
 
@@ -247,7 +236,7 @@ async function cargarEpisodios(urlsEpisodios) {
         contadorEpisodios.textContent = 'Error al cargar';
         listaEpisodios.innerHTML = `
             <p style="color: #f87171; grid-column: 1 / -1;">
-                No se pudieron obtener los detalles de los episodios desde el Endpoint 3.
+                No se pudieron obtener los detalles de los episodios desde la API.
             </p>
         `;
     }
@@ -311,6 +300,5 @@ function mostrarToast(mensaje, tipo = 'exito') {
     }, 2800);
 }
 
-// Iniciar verificaciones y carga
-verificarEstadoBackend();
+// Iniciar carga de detalles
 cargarDetallePersonaje();
