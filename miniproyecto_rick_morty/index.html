@@ -20,7 +20,13 @@
             <div class="marca-contenedor">
                 <span class="logo">PORTAL RICK & MORTY</span>
             </div>
-            <ul class="nav-enlaces">
+            <!-- Mobile Hamburger Menu Button (controlled by jQuery) -->
+            <button type="button" id="btn-menu-movil" class="btn-menu-movil" aria-label="Open navigation menu" aria-expanded="false">
+                <span class="linea-hamburguesa"></span>
+                <span class="linea-hamburguesa"></span>
+                <span class="linea-hamburguesa"></span>
+            </button>
+            <ul class="nav-enlaces" id="nav-enlaces">
                 <li><button type="button" id="nav-btn-catalogo" class="nav-link activo">🌐 Catálogo</button></li>
                 <li><button type="button" id="nav-btn-favoritos" class="nav-link">⭐ Mis Favoritos (<span id="contador-nav-fav">0</span>)</button></li>
                 <li><a href="https://rickandmortyapi.com/documentation" target="_blank" rel="noopener noreferrer" class="nav-link-externo">Documentación API ↗</a></li>
@@ -79,6 +85,13 @@
                 </div>
             </div>
 
+            <!-- Mobile filter toggle button (controlled by jQuery) -->
+            <button type="button" id="btn-toggle-filtros" class="btn-toggle-filtros" aria-expanded="false">
+                <span class="icono-filtro">⚙️</span>
+                <span class="texto-btn-filtro">Show Filters</span>
+                <span class="flecha-toggle">▼</span>
+            </button>
+
             <!-- Filtros combinados de la API -->
             <div class="barra-filtros">
                 <div class="filtro-grupo">
@@ -131,7 +144,16 @@
         <p>© 2026 Portal Rick and Morty | Aplicación Web Client-Side (Vanilla JS & localStorage)</p>
     </footer>
 
+    <!-- Floating scroll-to-top button for mobile devices (controlled by jQuery) -->
+    <button type="button" id="btn-scroll-top" class="btn-scroll-top" title="Back to top" aria-label="Back to top">
+        ↑
+    </button>
+
+    <!-- jQuery 3.7.1 Library -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="app.js"></script>
+    <!-- jQuery-powered mobile adaptation and responsiveness (WEB-8) -->
+    <script src="responsive.js"></script>
 </body>
 
 </html>
