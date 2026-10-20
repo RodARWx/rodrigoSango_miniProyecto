@@ -34,7 +34,6 @@
 10. [Error Handling & Validation Rules](#-error-handling--validation-rules)
 11. [Troubleshooting & FAQ](#-troubleshooting--faq)
 12. [Authors & Credits](#-authors--credits)
-13. [License](#-license)
 
 ---
 
@@ -425,34 +424,4 @@ Both frontend and backend implement layered validation to preserve data integrit
   - Preset Avatars: [DiceBear Avatars](https://www.dicebear.com/)
   - Sample Stock Photography: [Unsplash](https://unsplash.com/)
 
----
 
-## 📄 License
-
-This repository is distributed under the **MIT License**. The full text is provided below:
-
-```text
-MIT License
-
-Copyright (c) 2026 Rodrigo Brayan Sango
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
-All external libraries, dependencies, and APIs remain under their original open-source licenses (Apache 2.0, MIT, BSD).

@@ -1,117 +1,243 @@
-# 🚀 Portal Rick & Morty - Full-Stack Boilerplate (API + PostgreSQL)
+# 🚀 Rick & Morty Portal - Full-Stack Architecture (API + PostgreSQL)
 
-Aplicación web Full-Stack construida con **HTML5, CSS3, Vanilla JavaScript puro** en el frontend, y arquitectura desacoplada con **Node.js / Express** (y plantilla en **Java Spring Boot**) para el backend con persistencia en **Base de Datos Relacional PostgreSQL**.
-
-El sistema cumple rigurosamente con la restricción de consumir **únicamente 3 endpoints** de la API oficial pública de Rick and Morty ([rickandmortyapi.com](https://rickandmortyapi.com/)).
-
----
-
-## ⚡ Características Principales
-
-1. **Búsqueda con Delay Estricto de 4.0 Segundos y Círculo de Carga Natural**:
-   - Se mantiene el **tiempo estricto de 4.0 segundos (`DELAY_MS = 4000`)** requerido para la búsqueda mientras el usuario escribe en el catálogo.
-   - En lugar de la barra de progreso rígida anterior, se utiliza un **círculo de carga animado natural (Spinner rotatorio)** que gira fluidamente durante los 4 segundos de espera, acompañado de un mensaje sutil de estado.
-   - Búsqueda 100% natural y automática: al escribir, el círculo gira de forma fluida durante 4.0 segundos y consulta la API (con soporte de la tecla `Enter` si se desea consultar de inmediato).
-
-2. **Frontend Vanilla JavaScript Puro**:
-   - Sin frameworks pesados ni dependencias de empaquetado en el cliente.
-   - Peticiones asíncronas modernas con `fetch` y `async/await`.
-   - Sistema de diseño responsivo basado en **CSS Grid** y **Flexbox**, con paleta de colores de ciencia ficción (modo oscuro de alto contraste) y tipografía *Inter*.
-
-3. **Backend Boilerplate Exclusivo con PostgreSQL**:
-   - **100% PostgreSQL:** Sin motores intermedios ni SQLite. Conexión directa mediante `pg.Pool`.
-   - Arquitectura limpia en capas: Controladores (`controllers`), Modelos SQL (`models`), Rutas (`routes`) y Conexión (`config/database.js`).
-   - Inicialización automática de la tabla `favoritos` en PostgreSQL.
-   - Endpoints REST para persistir, consultar y eliminar personajes favoritos en PostgreSQL.
-   - Plantilla alternativa completa incluida en **Java 17 (Spring Boot + Spring Data JPA)** en la carpeta `backend-java/`.
+[![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![Express.js](https://img.shields.io/badge/Express.js-4.19+-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
+[![Java 17](https://img.shields.io/badge/Java-17-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.oracle.com/java/)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2.x-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Vanilla JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![HTML5 & CSS3](https://img.shields.io/badge/HTML5_%26_CSS3-Responsive-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/)
 
 ---
 
-## 🎯 Los 3 Endpoints Exclusivos de la API Consumidos
-
-| # | Endpoint Oficial | Método HTTP | Uso en la Aplicación |
-|---|---|---|---|
-| **1** | `https://rickandmortyapi.com/api/character/?name=...&status=...&gender=...&page=...` | `GET` | **Catálogo General y Búsqueda**: Filtrado por nombre, estado (*Alive*, *Dead*, *Unknown*), género y paginación en vivo. |
-| **2** | `https://rickandmortyapi.com/api/character/{id}` | `GET` | **Ficha Técnica Individual**: Detalle completo del personaje (imagen en alta calidad, especie, sub-tipo, origen y ubicación actual). |
-| **3** | `https://rickandmortyapi.com/api/episode/{ids}` | `GET` | **Historial de Episodios**: Consulta de nombres, códigos de temporada/capítulo y fechas de emisión de los episodios en los que aparece el personaje. |
-
-*Ningún otro endpoint de rickandmortyapi.com es consumido por la aplicación.*
+## 📋 Table of Contents
+1. [Project Overview & Architecture](#-project-overview--architecture)
+2. [Objectives](#-objectives)
+   - [General Objective](#general-objective)
+   - [Specific Objectives](#specific-objectives)
+3. [Scope of the System](#-scope-of-the-system)
+   - [Core Features](#core-features)
+   - [Boundaries & Constraints](#boundaries--constraints)
+4. [The 3 Official Endpoints Consumed](#-the-3-official-endpoints-consumed)
+5. [Project Directory Structure](#-project-directory-structure)
+6. [Technology Stack](#-technology-stack)
+7. [Prerequisites](#-prerequisites)
+8. [Database Setup & Configuration](#-database-setup--configuration)
+9. [Execution Guide (How to Run the Application)](#-execution-guide-how-to-run-the-application)
+   - [Option 1: Node.js / Express Backend (Recommended)](#option-1-nodejs--express-backend-recommended)
+   - [Option 2: Java Spring Boot Backend](#option-2-java-spring-boot-backend)
+10. [Local REST API Specifications](#-local-rest-api-specifications)
+11. [Error Handling & User Feedback](#-error-handling--user-feedback)
+12. [Troubleshooting & FAQ](#-troubleshooting--faq)
+13. [Authors & Credits](#-authors--credits)
 
 ---
 
-## 📁 Estructura del Proyecto
+## 📖 Project Overview & Architecture
+
+The **Rick & Morty Portal** is a full-stack web application built with semantic **HTML5**, modern **CSS3**, and pure **Vanilla ES6+ JavaScript** on the frontend, decoupled from a robust backend architecture featuring **Node.js / Express** (with an alternative **Java 17 / Spring Boot** boilerplate) and relational persistence in **PostgreSQL**.
+
+The application strictly complies with the constraint of consuming **only three (3) official endpoints** from the public Rick and Morty API ([rickandmortyapi.com](https://rickandmortyapi.com/)), while enabling users to bookmark and persist their favorite characters in PostgreSQL.
+
+---
+
+## 🎯 Objectives
+
+### General Objective
+To develop a decoupled full-stack web application that combines public third-party REST API consumption with local relational persistence in PostgreSQL, respecting strict architectural constraints.
+
+### Specific Objectives
+- **Strict API Rate & Constraint Handling**: Consume strictly three (3) endpoints from the official Rick & Morty API without accessing unauthorized resources.
+- **Search Delay UX**: Implement an intentional 4.0-second delay (`DELAY_MS = 4000`) with a natural rotating circular CSS spinner for optimized query frequency.
+- **Dual Backend Implementations**: Provide both a Node.js/Express service and a Java Spring Boot alternative to demonstrate polyglot backend capability.
+- **Relational Persistence**: Model and manage character favorites in PostgreSQL using clean connection pooling (`pg.Pool`).
+- **Responsive Client Interface**: Build a responsive dark sci-fi UI using CSS Grid and Flexbox with zero client-side framework overhead.
+
+---
+
+## 🔭 Scope of the System
+
+### Core Features
+
+1. **Search with Strict 4.0s Delay & Circular Spinner**:
+   - 4.0-second timer (`DELAY_MS = 4000`) while typing in the catalog search input.
+   - Smooth rotating circular CSS spinner providing fluid visual feedback.
+   - Immediate search execution available via the <kbd>Enter</kbd> key.
+
+2. **Frontend Vanilla JavaScript**:
+   - Zero heavyweight client frameworks or bundlers.
+   - Asynchronous requests using native `fetch` and `async/await`.
+   - Dark sci-fi aesthetic with *Inter* typography and toast alerts.
+
+3. **Backend Boilerplate with PostgreSQL**:
+   - Native PostgreSQL connection pool via `pg.Pool`.
+   - Layered architecture: Controllers (`controllers`), SQL Models (`models`), Routes (`routes`), and Config (`config/database.js`).
+   - Automated schema initialization (`backend/database/schema.sql`).
+   - Alternative Java 17 (Spring Boot + Spring Data JPA) backend in `backend-java/`.
+
+### Boundaries & Constraints
+- Only the **3 authorized endpoints** from `rickandmortyapi.com` are accessed.
+- Persistence relies strictly on **PostgreSQL**.
+
+---
+
+## 🎯 The 3 Official Endpoints Consumed
+
+| # | Endpoint URL | HTTP Method | Application Usage |
+|---|---|:---:|---|
+| **1** | `https://rickandmortyapi.com/api/character/?name={name}&status={status}&gender={gender}&page={page}` | `GET` | **Catalog & Search**: Filter by name, status, gender, and live page index. |
+| **2** | `https://rickandmortyapi.com/api/character/{id}` | `GET` | **Character Profile**: Detailed attributes by unique ID (species, origin, location). |
+| **3** | `https://rickandmortyapi.com/api/episode/{ids}` | `GET` | **Episode History**: Fetches episode titles, season codes, and air dates. |
+
+---
+
+## 📁 Project Directory Structure
 
 ```text
 miniproyecto_rick_morty/
-├── backend/                         # Backend Boilerplate en JavaScript (Node.js / Express)
+├── backend/                         # Node.js / Express Backend
 │   ├── config/
-│   │   └── database.js              # Conexión Pool a PostgreSQL y ejecución SQL
+│   │   └── database.js              # PostgreSQL pool connection (pg.Pool)
 │   ├── controllers/
-│   │   └── favoritosController.js   # Controladores REST para favoritos y estadísticas
+│   │   └── favoritosController.js   # REST controllers for favorites and stats
 │   ├── models/
-│   │   └── favoritoModel.js         # Capa de datos con consultas SQL para PostgreSQL
+│   │   └── favoritoModel.js         # SQL queries for PostgreSQL
 │   ├── routes/
-│   │   └── api.js                   # Enrutamiento de /api/favoritos, /api/health, /api/stats
+│   │   └── api.js                   # Express router (/api/favoritos, /api/health, /api/stats)
 │   ├── database/
-│   │   └── schema.sql               # Script DDL oficial para PostgreSQL
-│   └── server.js                    # Servidor Express y entrega de archivos estáticos
+│   │   ├── schema.sql               # PostgreSQL DDL schema
+│   │   └── init_postgres.js         # Automated schema initializer
+│   └── server.js                    # Express app and static asset delivery
 │
-├── backend-java/                    # Boilerplate alternativo en Java Spring Boot
-│   ├── pom.xml                      # Dependencias Maven (Spring Boot, JPA, Driver PostgreSQL)
+├── backend-java/                    # Alternative Java Spring Boot Backend
+│   ├── pom.xml                      # Maven dependencies (Spring Boot, JPA, PostgreSQL Driver)
 │   └── src/main/
-│       ├── java/com/rickandmorty/   # Application, Entidad Favorito, Repositorio y Controlador
+│       ├── java/com/rickandmorty/   # Application, Favorito model, repo, and controller
 │       └── resources/
-│           └── application.properties # Parámetros de conexión JDBC a PostgreSQL
+│           └── application.properties # JDBC connection parameters for PostgreSQL
 │
-├── index.html                       # Catálogo de personajes, buscador natural y pestaña de favoritos
-├── detalle.html                     # Vista de ficha técnica individual (Endpoints 2 y 3)
-├── style.css                        # Estilos responsivos con spinners circulares modernos
-├── app.js                           # Lógica cliente para Endpoint 1 y sincronización con BD
-├── detalle.js                       # Lógica cliente para Endpoints 2 y 3 con guardado en BD
-├── .env                             # Variables de entorno (Credenciales PostgreSQL)
-├── .env.example                     # Plantilla de variables de entorno
-└── package.json                     # Scripts y dependencias de Node.js
+├── index.html                       # Character catalog, search input, and favorites tab
+├── detalle.html                     # Single character technical profile view
+├── style.css                        # Responsive styles and rotating circular spinner animation
+├── app.js                           # Client logic for Endpoint 1 and DB synchronization
+├── detalle.js                       # Client logic for Endpoints 2 & 3 with DB save toggle
+├── .env                             # Environment variables (PostgreSQL credentials)
+├── .env.example                     # Environment template
+└── package.json                     # Node.js scripts and dependencies
 ```
 
 ---
 
-## 🛠️ Cómo Ejecutar el Proyecto
+## 🛠️ Technology Stack
 
-### Opción 1: Backend en Node.js / Express (Recomendado y listo para usar)
+| Component | Technology |
+|---|---|
+| **Frontend** | Semantic HTML5, CSS3 Grid/Flexbox, Native JavaScript (ES6+) |
+| **Primary Backend** | Node.js (v18+), Express.js 4.19, `pg` (node-postgres) |
+| **Alternative Backend**| Java 17, Spring Boot 3.2.x, Spring Data JPA, Hibernate |
+| **Database** | PostgreSQL 14+ |
+| **Typography** | Google Fonts (*Inter*) |
+| **External API** | [The Rick and Morty API](https://rickandmortyapi.com/) |
 
-1. **Configurar credenciales de PostgreSQL** (en el archivo `.env`):
+---
+
+## ⚙️ Prerequisites
+
+- **Node.js**: Version 18.0.0 or higher.
+- **Java JDK**: Version 17+ (if choosing the Java backend).
+- **Maven**: Version 3.8+ (for Java backend).
+- **PostgreSQL**: Running on port `5432`.
+- **Modern Web Browser**: Chrome, Firefox, Edge, Safari.
+
+---
+
+## 💾 Database Setup & Configuration
+
+1. In PostgreSQL, create the dedicated database:
+   ```sql
+   CREATE DATABASE rick_morty;
+   ```
+2. Configure credentials in `miniproyecto_rick_morty/.env`:
    ```env
    PORT=3000
    PGHOST=localhost
    PGPORT=5432
    PGUSER=postgres
-   PGPASSWORD=tu_contraseña_aqui
+   PGPASSWORD=your_password
    PGDATABASE=rick_morty
    ```
-
-2. **Iniciar el servidor**:
+3. Initialize the table schema:
    ```bash
-   npm start
+   node backend/database/init_postgres.js
    ```
-
-3. **Abrir en tu navegador**:
-   - 🌐 Aplicación Web: [http://localhost:3000](http://localhost:3000)
-   - 📑 Verificación de Salud: [http://localhost:3000/api/health](http://localhost:3000/api/health)
-   - ⭐ API de Favoritos en BD: [http://localhost:3000/api/favoritos](http://localhost:3000/api/favoritos)
-   - 📊 Estadísticas del Sistema: [http://localhost:3000/api/stats](http://localhost:3000/api/stats)
 
 ---
 
-### Opción 2: Backend en Java (Spring Boot)
+## 🚀 Execution Guide (How to Run the Application)
 
-Si prefieres o te solicitan el backend en Java:
-1. Dirígete a la carpeta `backend-java`:
+### Option 1: Node.js / Express Backend (Recommended)
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Start the server:
+   ```bash
+   npm start
+   ```
+3. Open in your browser:
+   - 🌐 Web Application: [http://localhost:3000](http://localhost:3000)
+   - 🩺 Health Check: [http://localhost:3000/api/health](http://localhost:3000/api/health)
+   - ⭐ Favorites API: [http://localhost:3000/api/favoritos](http://localhost:3000/api/favoritos)
+
+---
+
+### Option 2: Java Spring Boot Backend
+1. Navigate to `backend-java`:
    ```bash
    cd backend-java
    ```
-2. Configura tus credenciales de PostgreSQL en `src/main/resources/application.properties`.
-3. Ejecuta con Maven o tu IDE preferido (IntelliJ / Eclipse / VS Code):
+2. Configure PostgreSQL credentials in `src/main/resources/application.properties`.
+3. Launch via Maven:
    ```bash
    mvn spring-boot:run
    ```
-4. El backend en Java responderá en el puerto `8080`.
+4. The Java backend runs at port `8080`.
+
+---
+
+## 📡 Local REST API Specifications
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/favoritos` | List all bookmarked favorite characters from PostgreSQL |
+| `POST` | `/api/favoritos` | Save a character to PostgreSQL (`character_id`, `name`, `image`, etc.) |
+| `DELETE`| `/api/favoritos/:id` | Remove a character from favorites by local record ID |
+| `GET` | `/api/stats` | System statistics (total favorites count, dominant species) |
+| `GET` | `/api/health` | Health check verifying PostgreSQL database connectivity |
+
+---
+
+## 🛡️ Error Handling & User Feedback
+
+1. **Search with No Matches**: Empty state message inviting the user to adjust filter terms.
+2. **Database Downtime**: Graceful `503 Service Unavailable` response if PostgreSQL is offline, with frontend toast alert.
+3. **Network Failures**: Catches external API fetch errors and displays non-blocking toast notifications.
+
+---
+
+## ❓ Troubleshooting & FAQ
+
+### 1. `Error: connect ECONNREFUSED 127.0.0.1:5432`
+Ensure PostgreSQL service is running and credentials in `.env` match your local setup.
+
+### 2. Can I run both backends simultaneously?
+Node.js uses port 3000 and Java uses port 8080. If running Java, ensure the port does not conflict with the Student Management backend.
+
+---
+
+## 👥 Authors & Credits
+
+- **Developer**: Rodrigo Brayan Sango
+- **Course**: Web Programming - Seventh Semester
+- **Institution**: Universidad Central del Ecuador (UCE)
+- **External Data Source**: [The Rick and Morty API](https://rickandmortyapi.com/)
