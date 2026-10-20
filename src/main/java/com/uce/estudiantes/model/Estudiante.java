@@ -9,9 +9,8 @@ import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 /**
- * Entidad JPA que representa la tabla 'estudiantes' en la base de datos
- * PostgreSQL.
- * Incluye índices para acelerar búsquedas y filtros en grandes volúmenes de registros.
+ * JPA Entity representing the 'estudiantes' table in the PostgreSQL database.
+ * Includes indexes to accelerate searches and filters on large volumes of records.
  */
 @Entity
 @Table(name = "estudiantes", indexes = {
@@ -39,11 +38,11 @@ public class Estudiante {
     @Column(length = 500)
     private String descripcion;
 
-    // Constructor vacío requerido por JPA
+    // No-args constructor required by JPA
     public Estudiante() {
     }
 
-    // Constructor con parámetros
+    // Parameterized constructor
     public Estudiante(String nombre, String correo, String curso,
             String descripcion, String imageUrl) {
         this.nombre = nombre;
@@ -63,7 +62,7 @@ public class Estudiante {
         this.imageUrl = imageUrl;
     }
 
-    // Getters y Setters
+    // Getters and Setters
     public Long getId() {
         return id;
     }

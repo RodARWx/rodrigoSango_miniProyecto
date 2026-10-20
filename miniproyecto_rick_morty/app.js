@@ -1,12 +1,12 @@
 // ==========================================================================
-// APLICACIÓN RICK AND MORTY - FRONTEND CLIENT-SIDE (VANILLA JS PURO)
-// Consumo directo de la API externa (Endpoint 1) + Persistencia en localStorage
+// RICK AND MORTY APPLICATION - CLIENT-SIDE FRONTEND (PURE VANILLA JS)
+// Direct external API consumption (Endpoint 1) + localStorage persistence
 // ==========================================================================
 
 const API_BASE = 'https://rickandmortyapi.com/api';
 const STORAGE_KEY_FAVORITOS = 'rick_morty_favoritos';
 
-// Estado global de la aplicación
+// Global application state
 let vistaActual = 'catalogo'; // 'catalogo' | 'favoritos'
 let paginaActual = 1;
 let totalPaginas = 1;
@@ -15,14 +15,14 @@ let terminoBusqueda = '';
 let estadoSeleccionado = '';
 let generoSeleccionado = '';
 
-// Almacén en memoria de IDs favoritos sincronizados con localStorage
+// In-memory set of favorite IDs synchronized with localStorage
 let idsFavoritos = new Set();
 
-// Control de delay estricto de 4.0 segundos con animación de spinner
+// Strict 4.0-second delay control with animated spinner feedback
 const DELAY_MS = 4000;
 let temporizadorBusqueda = null;
 
-// Elementos del DOM
+// DOM Elements
 const gridPersonajes = document.getElementById('grid-personajes');
 const inputBusqueda = document.getElementById('input-busqueda');
 const spinnerBusqueda = document.getElementById('spinner-busqueda');
@@ -47,38 +47,38 @@ const conteoTabFav = document.getElementById('conteo-tab-fav');
 const toastContenedor = document.getElementById('toast-contenedor');
 
 // ==========================================================================
-// 1. GESTOR DE ALMACENAMIENTO LOCAL (LOCALSTORAGE)
+// 1. LOCAL STORAGE MANAGER (LOCALSTORAGE)
 // ==========================================================================
 
 /**
- * Obtiene la lista de personajes favoritos almacenados en localStorage.
- * @returns {Array<Object>} Lista de personajes favoritos
+ * Retrieves the list of favorite characters stored in localStorage.
+ * @returns {Array<Object>} List of favorite character objects
  */
 function obtenerFavoritosStorage() {
     try {
         const data = localStorage.getItem(STORAGE_KEY_FAVORITOS);
         return data ? JSON.parse(data) : [];
     } catch (error) {
-        console.error('Error al leer favoritos desde localStorage:', error);
+        console.error('Error reading favorites from localStorage:', error);
         return [];
     }
 }
 
 /**
- * Guarda la colección completa de favoritos en localStorage.
+ * Persists the entire favorites collection to localStorage.
  * @param {Array<Object>} favoritos
  */
 function guardarFavoritosStorage(favoritos) {
     try {
         localStorage.setItem(STORAGE_KEY_FAVORITOS, JSON.stringify(favoritos));
     } catch (error) {
-        console.error('Error al guardar favoritos en localStorage:', error);
-        mostrarToast('Error de almacenamiento en el navegador', 'eliminar');
+        console.error('Error saving favorites to localStorage:', error);
+        mostrarToast('Browser storage error', 'eliminar');
     }
 }
 
 /**
- * Sincroniza el Set en memoria `idsFavoritos` y los contadores visuales.
+ * Synchronizes the in-memory `idsFavoritos` Set and visual counter badges.
  */
 function sincronizarFavoritos() {
     const lista = obtenerFavoritosStorage();
@@ -88,7 +88,7 @@ function sincronizarFavoritos() {
 }
 
 /**
- * Actualiza los badges de conteo en la barra de navegación y pestañas.
+ * Updates favorite counter badges in the navbar and navigation tabs.
  * @param {number} total
  */
 function actualizarContadoresFavoritos(total) {
@@ -97,7 +97,7 @@ function actualizarContadoresFavoritos(total) {
 }
 
 /**
- * Alterna el estado de favorito de un personaje en localStorage.
+ * Toggles the favorite status of a character in localStorage.
  * @param {Object} personaje
  * @param {HTMLElement} btnElement
  */
@@ -107,7 +107,7 @@ function toggleFavorito(personaje, btnElement) {
     const indice = favoritos.findIndex(f => Number(f.id) === id);
 
     if (indice !== -1) {
-        // Eliminar de favoritos
+        // Remove from favorites
         favoritos.splice(indice, 1);
         guardarFavoritosStorage(favoritos);
         idsFavoritos.delete(id);
@@ -115,13 +115,13 @@ function toggleFavorito(personaje, btnElement) {
         btnElement.classList.remove('es-favorito');
         btnElement.innerHTML = '☆';
         btnElement.title = 'Guardar en Favoritos';
-        mostrarToast(`"${personaje.nombre || personaje.name}" eliminado de Favoritos`, 'eliminar');
+        mostrarToast(`"${personaje.nombre || personaje.name}" removed from Favorites`, 'eliminar');
 
         if (vistaActual === 'favoritos') {
             consultarFavoritosLocal();
         }
     } else {
-        // Agregar a favoritos
+        // Add to favorites
         const nuevoFavorito = {
             id: Number(personaje.id),
             nombre: personaje.nombre || personaje.name,
@@ -140,14 +140,14 @@ function toggleFavorito(personaje, btnElement) {
         btnElement.classList.add('es-favorito');
         btnElement.innerHTML = '★';
         btnElement.title = 'Eliminar de Favoritos';
-        mostrarToast(`⭐ "${nuevoFavorito.nombre}" guardado en Favoritos`, 'exito');
+        mostrarToast(`⭐ "${nuevoFavorito.nombre}" saved to Favorites`, 'exito');
     }
 
     actualizarContadoresFavoritos(idsFavoritos.size);
 }
 
 // ==========================================================================
-// 2. CONSULTA DE PERSONAJES (ENDPOINT 1: GET /api/character/?...)
+// 2. CHARACTER QUERY (ENDPOINT 1: GET /api/character/?...)
 // ==========================================================================
 
 async function consultarPersonajes(pagina = 1) {
@@ -156,12 +156,12 @@ async function consultarPersonajes(pagina = 1) {
     cancelarTemporizador();
     paginaActual = pagina;
     mostrarCirculoCarga(true);
-    badgeContador.textContent = 'Consultando API...';
+    badgeContador.textContent = 'Consulting API...';
 
     gridPersonajes.innerHTML = `
         <div class="estado-mensaje" style="grid-column: 1 / -1;">
             <div class="spinner"></div>
-            <p>Obteniendo personajes desde la API oficial de Rick & Morty...</p>
+            <p>Fetching characters from the official Rick & Morty API...</p>
         </div>
     `;
 
@@ -178,7 +178,7 @@ async function consultarPersonajes(pagina = 1) {
             params.append('gender', generoSeleccionado.trim());
         }
 
-        // LLAMADA DIRECTA AL ENDPOINT 1 DE LA API EXTERNA
+        // Direct request to Endpoint 1 of the external API
         const respuesta = await fetch(`${API_BASE}/character/?${params.toString()}`);
 
         if (respuesta.status === 404) {
@@ -199,13 +199,13 @@ async function consultarPersonajes(pagina = 1) {
         renderizarTarjetas(data.results);
 
     } catch (error) {
-        console.error('Error al consultar Endpoint 1 de la API:', error);
-        badgeContador.textContent = 'Error de conexión';
+        console.error('Error querying Endpoint 1 of the API:', error);
+        badgeContador.textContent = 'Connection error';
         gridPersonajes.innerHTML = `
             <div class="estado-mensaje" style="grid-column: 1 / -1;">
-                <p>No se pudo conectar con la API de Rick and Morty.</p>
+                <p>Could not connect to the Rick and Morty API.</p>
                 <small style="color: #64748b; margin-top: 0.5rem; display: block;">
-                    Verifica tu conexión a internet o intenta nuevamente.
+                    Please check your internet connection or try again later.
                 </small>
             </div>
         `;
@@ -215,7 +215,7 @@ async function consultarPersonajes(pagina = 1) {
 }
 
 // ==========================================================================
-// 3. CONSULTA DE FAVORITOS ALMACENADOS EN LOCALSTORAGE
+// 3. QUERY FAVORITES STORED IN LOCALSTORAGE
 // ==========================================================================
 
 function consultarFavoritosLocal() {
@@ -223,17 +223,17 @@ function consultarFavoritosLocal() {
     paginacionContenedor.style.display = 'none';
 
     const lista = sincronizarFavoritos();
-    badgeContador.textContent = `${lista.length} personaje(s) guardado(s)`;
+    badgeContador.textContent = `${lista.length} character(s) saved`;
 
     if (lista.length === 0) {
         gridPersonajes.innerHTML = `
             <div class="estado-mensaje" style="grid-column: 1 / -1;">
-                <p>No tienes personajes guardados en Favoritos todavía.</p>
+                <p>You have no saved favorite characters yet.</p>
                 <small style="color: #64748b; margin-top: 0.5rem; display: block;">
-                    Explora el catálogo y pulsa el icono de estrella ⭐ en cualquier personaje para guardarlo en tu navegador.
+                    Explore the catalog and click the star icon ⭐ on any character to bookmark it in your browser.
                 </small>
                 <button type="button" class="btn btn-buscar" style="margin-top: 1rem;" onclick="activarVistaCatalogo()">
-                    Explorar Catálogo de Personajes
+                    Explore Character Catalog
                 </button>
             </div>
         `;
@@ -244,7 +244,7 @@ function consultarFavoritosLocal() {
 }
 
 // ==========================================================================
-// 4. RENDERIZADO DE TARJETAS (CSS GRID RESPONSIVO)
+// 4. CARD RENDERING (RESPONSIVE CSS GRID)
 // ==========================================================================
 
 function renderizarTarjetas(personajes) {
@@ -260,7 +260,7 @@ function renderizarTarjetas(personajes) {
         tarjeta.classList.add('tarjeta-personaje');
         tarjeta.setAttribute('tabindex', '0');
         tarjeta.setAttribute('role', 'button');
-        tarjeta.setAttribute('aria-label', `Ver detalles de ${personaje.name || personaje.nombre}`);
+        tarjeta.setAttribute('aria-label', `View details for ${personaje.name || personaje.nombre}`);
 
         const id = Number(personaje.id);
         const nombre = personaje.name || personaje.nombre;
@@ -284,12 +284,12 @@ function renderizarTarjetas(personajes) {
 
         tarjeta.innerHTML = `
             <div class="tarjeta-foto-envoltura">
-                <img src="${imagen}" alt="Retrato de ${nombre}" loading="lazy">
+                <img src="${imagen}" alt="Portrait of ${nombre}" loading="lazy">
                 
-                <!-- Botón de estrella para guardar/eliminar en localStorage -->
+                <!-- Star button to save/remove favorite from localStorage -->
                 <button type="button" class="btn-favorito-tarjeta ${esFav ? 'es-favorito' : ''}" 
-                    title="${esFav ? 'Eliminar de Favoritos' : 'Guardar en Favoritos'}" 
-                    aria-label="Marcar como favorito"
+                    title="${esFav ? 'Remove from Favorites' : 'Save to Favorites'}" 
+                    aria-label="Toggle favorite"
                     data-id="${id}">
                     ${esFav ? '★' : '☆'}
                 </button>
@@ -313,7 +313,7 @@ function renderizarTarjetas(personajes) {
             </div>
         `;
 
-        // Evento para el botón de favoritos (evita que se abra la ficha al hacer clic en la estrella)
+        // Event listener for favorite button (prevents card click navigation)
         const btnFav = tarjeta.querySelector('.btn-favorito-tarjeta');
         btnFav.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -328,7 +328,7 @@ function renderizarTarjetas(personajes) {
             }, btnFav);
         });
 
-        // Navegación al hacer clic en la tarjeta o presionar Enter
+        // Navigation click or keyboard Enter listener
         tarjeta.addEventListener('click', () => irADetalle(id));
         tarjeta.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') irADetalle(id);
@@ -339,23 +339,23 @@ function renderizarTarjetas(personajes) {
 }
 
 function renderizarSinResultados() {
-    badgeContador.textContent = '0 personajes encontrados';
-    infoPaginacion.textContent = 'Página 0 de 0';
+    badgeContador.textContent = '0 characters found';
+    infoPaginacion.textContent = 'Page 0 of 0';
     btnPaginaAnterior.disabled = true;
     btnPaginaSiguiente.disabled = true;
 
     gridPersonajes.innerHTML = `
         <div class="estado-mensaje" style="grid-column: 1 / -1;">
-            <p>No se encontraron personajes que coincidan con la búsqueda.</p>
+            <p>No characters match the specified search criteria.</p>
             <small style="color: #64748b; margin-top: 0.5rem; display: block;">
-                Intenta con otro término o limpia los filtros de búsqueda.
+                Try another keyword or reset the search filters.
             </small>
         </div>
     `;
 }
 
 // ==========================================================================
-// 5. BÚSQUEDA NATURAL (CON CÍRCULO DE CARGA Y DEBOUNCE DE 4 SEGUNDOS)
+// 5. NATURAL SEARCH (WITH ANIMATED SPINNER AND 4.0-SECOND DEBOUNCE)
 // ==========================================================================
 
 function mostrarCirculoCarga(mostrar) {
@@ -378,11 +378,11 @@ function manejarEntradaBusqueda() {
         return;
     }
 
-    // Activar spinner animado fluido durante los 4.0 segundos
+    // Activate smooth rotating spinner during the 4.0-second delay
     mostrarCirculoCarga(true);
-    badgeContador.textContent = 'Buscando personajes...';
+    badgeContador.textContent = 'Searching characters...';
 
-    // Disparo estricto a los 4000 ms exactos
+    // Strict trigger after exactly 4000 ms
     temporizadorBusqueda = setTimeout(() => {
         cancelarTemporizador();
         terminoBusqueda = inputBusqueda.value.trim();
@@ -429,11 +429,11 @@ function filtrarFavoritosLocal() {
         lista = lista.filter(p => (p.genero || p.gender || '').toLowerCase() === gen);
     }
 
-    badgeContador.textContent = `${lista.length} coincidencia(s) en Favoritos`;
+    badgeContador.textContent = `${lista.length} match(es) in Favorites`;
     renderizarTarjetas(lista);
 }
 
-// Eventos de entrada de búsqueda
+// Search input event listeners
 inputBusqueda.addEventListener('input', manejarEntradaBusqueda);
 inputBusqueda.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
@@ -442,7 +442,7 @@ inputBusqueda.addEventListener('keydown', (e) => {
     }
 });
 
-// Filtros combinados
+// Combined filter change listeners
 filtroEstado.addEventListener('change', (e) => {
     estadoSeleccionado = e.target.value;
     ejecutarBusquedaInmediata();
@@ -469,7 +469,7 @@ btnLimpiarFiltros.addEventListener('click', () => {
     }
 });
 
-// Paginación
+// Pagination event listeners
 btnPaginaAnterior.addEventListener('click', () => {
     if (paginaActual > 1) {
         consultarPersonajes(paginaActual - 1);
@@ -485,15 +485,15 @@ btnPaginaSiguiente.addEventListener('click', () => {
 });
 
 function actualizarControlesPaginacion() {
-    badgeContador.textContent = `${totalPersonajes} personajes en catálogo (API)`;
-    infoPaginacion.textContent = `Página ${paginaActual} de ${totalPaginas}`;
+    badgeContador.textContent = `${totalPersonajes} characters in catalog (API)`;
+    infoPaginacion.textContent = `Page ${paginaActual} of ${totalPaginas}`;
     btnPaginaAnterior.disabled = (paginaActual <= 1);
     btnPaginaSiguiente.disabled = (paginaActual >= totalPaginas);
     paginacionContenedor.style.display = 'flex';
 }
 
 // ==========================================================================
-// 6. CONTROL DE PESTAÑAS (CATÁLOGO vs FAVORITOS)
+// 6. TAB CONTROLLER (CATALOG vs FAVORITES)
 // ==========================================================================
 
 function activarVistaCatalogo() {
@@ -525,7 +525,7 @@ navBtnCatalogo.addEventListener('click', activarVistaCatalogo);
 navBtnFavoritos.addEventListener('click', activarVistaFavoritos);
 
 // ==========================================================================
-// 7. UTILIDADES
+// 7. UTILITIES
 // ==========================================================================
 
 function traducirGenero(genero) {
@@ -557,7 +557,7 @@ function mostrarToast(mensaje, tipo = 'exito') {
 }
 
 // ==========================================================================
-// 8. INICIALIZACIÓN
+// 8. INITIALIZATION
 // ==========================================================================
 
 sincronizarFavoritos();

@@ -12,22 +12,22 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Repositorio JPA para operaciones CRUD y consultas paginadas sobre la entidad Estudiante.
+ * JPA Repository for CRUD operations and paginated queries on the Estudiante entity.
  */
 @Repository
 public interface EstudianteRepository extends JpaRepository<Estudiante, Long> {
 
-    // Método auxiliar para buscar un estudiante por correo electrónico
+    // Helper method to find a student by email
     Optional<Estudiante> findByCorreo(String correo);
 
-    // Método auxiliar para verificar existencia por correo electrónico
+    // Helper method to check student existence by email
     boolean existsByCorreo(String correo);
 
-    // Consulta para listar los cursos únicos para filtros dinámicos
+    // Query to list unique courses for dynamic filter options
     @Query("SELECT DISTINCT e.curso FROM Estudiante e WHERE e.curso IS NOT NULL AND TRIM(e.curso) != '' ORDER BY e.curso ASC")
     List<String> findDistinctCursos();
 
-    // Consulta paginada con filtrado dinámico en base de datos para alta concurrencia y grandes volúmenes
+    // Paginated query with dynamic database-level filtering for high concurrency and large volumes
     @Query("SELECT e FROM Estudiante e WHERE " +
            "(:termino IS NULL OR :termino = '' OR " +
            " LOWER(e.nombre) LIKE LOWER(CONCAT('%', :termino, '%')) OR " +
@@ -39,7 +39,7 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Long> {
                                       @Param("curso") String curso,
                                       Pageable pageable);
 
-    // Búsqueda de sugerencias en servidor con límite mediante Pageable
+    // Server-side search suggestion query limited via Pageable
     @Query("SELECT e FROM Estudiante e WHERE " +
            "LOWER(e.nombre) LIKE LOWER(CONCAT('%', :termino, '%')) OR " +
            "LOWER(e.correo) LIKE LOWER(CONCAT('%', :termino, '%')) OR " +

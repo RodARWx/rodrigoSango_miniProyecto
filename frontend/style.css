@@ -1,5 +1,5 @@
 /* ==========================================================================
-   SISTEMA DE DISEÑO RESPONSIVO (CSS GRID, FLEXBOX & MEDIA QUERIES)
+   RESPONSIVE DESIGN SYSTEM (CSS GRID, FLEXBOX & MEDIA QUERIES)
    ========================================================================== */
 
 :root {
@@ -35,7 +35,7 @@ body {
 }
 
 /* ==========================================================================
-   NAVEGACIÓN (FLEXBOX)
+   NAVIGATION BAR (FLEXBOX)
    ========================================================================== */
 .barra-navegacion {
     background-color: #0f172a;
@@ -86,7 +86,7 @@ body {
 }
 
 /* ==========================================================================
-   HERO / ENCABEZADO
+   HERO / HEADER
    ========================================================================== */
 .hero-header {
     background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
@@ -109,7 +109,7 @@ body {
 }
 
 /* ==========================================================================
-   CONTENEDOR PRINCIPAL
+   MAIN CONTAINER
    ========================================================================== */
 .contenedor {
     max-width: 1200px;
@@ -125,7 +125,7 @@ body {
 }
 
 /* ==========================================================================
-   SISTEMA DE PESTAÑAS (SPA)
+   TAB SYSTEM (SPA)
    ========================================================================== */
 .vista-pestaña {
     width: 100%;
@@ -144,7 +144,7 @@ body {
 }
 
 /* ==========================================================================
-   FORMULARIO (CSS GRID Y FLEXBOX)
+   FORM SECTION (CSS GRID AND FLEXBOX)
    ========================================================================== */
 .tarjeta-panel {
     background-color: var(--color-tarjeta);
@@ -207,7 +207,7 @@ body {
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
-/* Estados de validación visual */
+/* Visual validation states */
 .campo input.campo-invalido,
 .campo textarea.campo-invalido {
     border-color: var(--color-peligro);
@@ -242,7 +242,7 @@ body {
 }
 
 /* ==========================================================================
-   CATÁLOGO DE AVATARES PREDETERMINADOS
+   PRESET AVATARS CATALOG
    ========================================================================== */
 .encabezado-avatar {
     display: flex;
@@ -349,7 +349,7 @@ body {
 }
 
 /* ==========================================================================
-   SECCIÓN DE BÚSQUEDA Y SUGERENCIAS (FLEXBOX & POSITION ABSOLUTE)
+   SEARCH & REAL-TIME SUGGESTIONS (FLEXBOX & POSITION ABSOLUTE)
    ========================================================================== */
 .seccion-busqueda {
     margin-bottom: 2rem;
@@ -394,7 +394,7 @@ body {
     box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
 }
 
-/* Menú flotante de sugerencias en tiempo real */
+/* Floating real-time suggestions dropdown */
 .menu-sugerencias {
     position: absolute;
     top: calc(100% + 4px);
@@ -408,7 +408,7 @@ body {
     overflow-y: auto;
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
     z-index: 50;
-    display: none; /* Se activa con JS cuando hay resultados */
+    display: none; /* Toggled by JS when matching results exist */
 }
 
 .menu-sugerencias.abierto {
@@ -446,7 +446,7 @@ body {
 }
 
 /* ==========================================================================
-   BARRA DE FILTROS Y ORDENAMIENTO (SERVER-SIDE)
+   FILTER & SORTING BAR (SERVER-SIDE)
    ========================================================================== */
 .barra-filtros {
     display: flex;
@@ -495,16 +495,16 @@ body {
 }
 
 /* ==========================================================================
-   CUADRÍCULA DE TARJETAS (CSS GRID RESPONSIVO)
+   STUDENT CARDS GRID (RESPONSIVE CSS GRID)
    ========================================================================== */
 .grid-tarjetas {
     display: grid;
-    /* Responsive automático con ancho cómodo para el formato tipo credencial */
+    /* Responsive auto-fit cards suitable for ID credential layout */
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.5rem;
 }
 
-/* Tarjeta individual */
+/* Individual card */
 .tarjeta-estudiante {
     background-color: var(--color-tarjeta);
     border-radius: var(--radio-borde);
@@ -523,7 +523,7 @@ body {
     border-color: #cbd5e1;
 }
 
-/* Sección superior: Foto a la izquierda, Información a la derecha */
+/* Top section: Photo on the left, details on the right */
 .tarjeta-superior {
     display: flex;
     align-items: center;
@@ -532,7 +532,7 @@ body {
     margin-bottom: 0.9rem;
 }
 
-/* Contenedor de la foto rectangular (tipo carnet / ID) */
+/* Rectangular portrait photo container (ID badge format) */
 .tarjeta-foto-contenedor {
     flex-shrink: 0;
     width: 88px;
@@ -551,7 +551,7 @@ body {
     display: block;
 }
 
-/* Bloque derecho: Nombre, Curso y Correo alineados */
+/* Right block: Name, Course, and Email aligned */
 .tarjeta-info {
     flex: 1;
     min-width: 0;
@@ -597,7 +597,7 @@ body {
     line-height: 1.3;
 }
 
-/* Sección inferior: Descripción a ancho completo */
+/* Bottom section: Full width biography / description */
 .tarjeta-cuerpo {
     width: 100%;
     flex-grow: 1;
@@ -617,7 +617,7 @@ body {
     margin-bottom: 0.9rem;
 }
 
-/* Botones de acciones en la tarjeta */
+/* Card action buttons */
 .tarjeta-acciones {
     width: 100%;
     margin-top: auto;
@@ -662,7 +662,7 @@ body {
 }
 
 /* ==========================================================================
-   BARRA DE PAGINACIÓN (SERVER-SIDE)
+   PAGINATION BAR (SERVER-SIDE)
    ========================================================================== */
 .paginacion-barra {
     display: flex;
@@ -708,7 +708,7 @@ body {
     color: #475569;
 }
 
-/* Estado vacío / sin resultados */
+/* Empty / No results state */
 .sin-resultados {
     grid-column: 1 / -1;
     text-align: center;
@@ -732,7 +732,7 @@ body {
 }
 
 /* ==========================================================================
-   MODAL DE EDICIÓN (PUT)
+   EDIT MODAL (PUT)
    ========================================================================== */
 .modal-envoltura {
     position: fixed;

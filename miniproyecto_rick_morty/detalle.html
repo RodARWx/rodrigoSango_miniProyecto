@@ -14,7 +14,7 @@
 
 <body>
 
-    <!-- Barra de Navegación -->
+    <!-- Navigation Bar -->
     <nav class="barra-navegacion">
         <div class="nav-contenedor">
             <div class="marca-contenedor">
@@ -33,7 +33,7 @@
         </div>
     </nav>
 
-    <!-- Encabezado Hero -->
+    <!-- Hero Header -->
     <header class="hero-header hero-detalle">
         <div class="contenedor">
             <a href="index.html" class="btn-volver">&larr; Volver al listado de personajes</a>
@@ -44,26 +44,26 @@
 
     <main class="contenedor principal">
 
-        <!-- Contenedor del Detalle Completo -->
+        <!-- Full Detail View Container -->
         <div id="contenedor-detalle" class="vista-detalle">
             
-            <!-- Círculo de carga natural (Spinner rotatorio animado) -->
+            <!-- Animated Loading Spinner -->
             <div id="cargando-detalle" class="estado-mensaje">
                 <div class="spinner"></div>
                 <p>Consultando Endpoint 2 y Endpoint 3 de la API...</p>
             </div>
 
-            <!-- Ficha Técnica (Inyectada con detalle.js) -->
+            <!-- Technical Specifications Profile (Injected with detalle.js) -->
             <div id="ficha-tecnica" class="ficha-tecnica" style="display: none;">
                 
-                <!-- Columna Izquierda: Retrato, Estado y Acción de Base de Datos -->
+                <!-- Left Column: Portrait, Status, and Favorites Action -->
                 <div class="ficha-foto-columna">
                     <div class="ficha-foto-envoltura">
                         <img id="personaje-foto" src="" alt="Retrato del personaje">
                         <div id="personaje-estado-badge" class="estado-flotante">Estado</div>
                     </div>
 
-                    <!-- Botón de favoritos (localStorage) -->
+                    <!-- Favorite Toggle Button (localStorage) -->
                     <div class="ficha-accion-favorito">
                         <button type="button" id="btn-toggle-favorito" class="btn btn-favorito-detalle">
                             <span id="icono-favorito-detalle">⭐</span>
@@ -72,7 +72,7 @@
                     </div>
                 </div>
 
-                <!-- Columna Derecha: Especificaciones Técnicas (Endpoint 2: /api/character/{id}) -->
+                <!-- Right Column: Technical Specifications (Endpoint 2: /api/character/{id}) -->
                 <div class="ficha-info-columna">
                     <div class="ficha-titulo-envoltura">
                         <h2 id="personaje-nombre-h2">Nombre</h2>
@@ -113,7 +113,7 @@
                 </div>
             </div>
 
-            <!-- Sección de Episodios (Endpoint 3: /api/episode/{ids}) -->
+            <!-- Episodes Section (Endpoint 3: /api/episode/{ids}) -->
             <section id="seccion-episodios" class="seccion-episodios" style="display: none;">
                 <div class="episodios-cabecera">
                     <div>
@@ -124,14 +124,14 @@
                 </div>
 
                 <div id="lista-episodios" class="grilla-episodios">
-                    <!-- Inyectado dinámicamente con detalle.js -->
+                    <!-- Dynamically injected with detalle.js -->
                 </div>
             </section>
         </div>
 
     </main>
 
-    <!-- Contenedor de notificaciones Toast -->
+    <!-- Floating container for Toast notifications -->
     <div id="toast-contenedor" class="toast-contenedor" aria-live="polite"></div>
 
     <footer class="footer">

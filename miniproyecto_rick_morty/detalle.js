@@ -1,20 +1,20 @@
 // ==========================================================================
-// VISTA DE DETALLE - FRONTEND CLIENT-SIDE (VANILLA JS PURO)
-// Consumo directo de ENDPOINT 2 (Personaje) y ENDPOINT 3 (Episodios)
-// + Persistencia en localStorage
+// CHARACTER DETAIL VIEW - CLIENT-SIDE FRONTEND (PURE VANILLA JS)
+// Direct consumption of ENDPOINT 2 (Character) and ENDPOINT 3 (Episodes)
+// + localStorage persistence
 // ==========================================================================
 
 const API_BASE = 'https://rickandmortyapi.com/api';
 const STORAGE_KEY_FAVORITOS = 'rick_morty_favoritos';
 
-// Obtener el ID del personaje desde la URL (?id=...)
+// Extract character ID from URL search parameters (?id=...)
 const urlParams = new URLSearchParams(window.location.search);
 const personajeId = urlParams.get('id');
 
 let datosPersonajeActual = null;
 let esFavoritoLocal = false;
 
-// Elementos del DOM
+// DOM Elements
 const detalleNombre = document.getElementById('detalle-nombre');
 const detalleSubtitulo = document.getElementById('detalle-subtitulo');
 const cargandoDetalle = document.getElementById('cargando-detalle');
@@ -40,7 +40,7 @@ const contadorEpisodios = document.getElementById('contador-episodios');
 const toastContenedor = document.getElementById('toast-contenedor');
 
 // ==========================================================================
-// 1. GESTOR DE FAVORITOS EN LOCALSTORAGE
+// 1. LOCALSTORAGE FAVORITES MANAGER
 // ==========================================================================
 
 function obtenerFavoritosStorage() {
@@ -48,7 +48,7 @@ function obtenerFavoritosStorage() {
         const data = localStorage.getItem(STORAGE_KEY_FAVORITOS);
         return data ? JSON.parse(data) : [];
     } catch (error) {
-        console.error('Error al leer favoritos desde localStorage:', error);
+        console.error('Error reading favorites from localStorage:', error);
         return [];
     }
 }
@@ -57,8 +57,8 @@ function guardarFavoritosStorage(favoritos) {
     try {
         localStorage.setItem(STORAGE_KEY_FAVORITOS, JSON.stringify(favoritos));
     } catch (error) {
-        console.error('Error al guardar favoritos en localStorage:', error);
-        mostrarToast('Error de almacenamiento en el navegador', 'eliminar');
+        console.error('Error saving favorites to localStorage:', error);
+        mostrarToast('Browser storage error', 'eliminar');
     }
 }
 
@@ -93,7 +93,7 @@ function alternarFavorito() {
         guardarFavoritosStorage(favoritos);
         esFavoritoLocal = false;
         actualizarBotonFavorito();
-        mostrarToast(`"${datosPersonajeActual.name}" eliminado de Favoritos`, 'eliminar');
+        mostrarToast(`"${datosPersonajeActual.name}" removed from Favorites`, 'eliminar');
     } else {
         const nuevoFavorito = {
             id,
@@ -110,7 +110,7 @@ function alternarFavorito() {
         guardarFavoritosStorage(favoritos);
         esFavoritoLocal = true;
         actualizarBotonFavorito();
-        mostrarToast(`⭐ "${datosPersonajeActual.name}" guardado en Favoritos`, 'exito');
+        mostrarToast(`⭐ "${datosPersonajeActual.name}" saved to Favorites`, 'exito');
     }
 }
 
@@ -119,55 +119,55 @@ if (btnToggleFavorito) {
 }
 
 // ==========================================================================
-// 2. CARGA DE DETALLES DEL PERSONAJE (ENDPOINT 2: GET /api/character/{id})
+// 2. CHARACTER DETAILS QUERY (ENDPOINT 2: GET /api/character/{id})
 // ==========================================================================
 
 async function cargarDetallePersonaje() {
     if (!personajeId) {
-        mostrarError('No se especificó un identificador de personaje válido.');
+        mostrarError('No valid character identifier was specified.');
         return;
     }
 
     try {
-        // LLAMADA DIRECTA AL ENDPOINT 2 DE LA API EXTERNA
+        // Direct request to Endpoint 2 of the external API
         const res = await fetch(`${API_BASE}/character/${personajeId}`);
         if (!res.ok) {
-            throw new Error(`Personaje no encontrado (HTTP ${res.status})`);
+            throw new Error(`Character not found (HTTP ${res.status})`);
         }
 
         const personaje = await res.json();
         datosPersonajeActual = personaje;
         renderizarFichaTecnica(personaje);
 
-        // Verificar si este personaje ya está en favoritos de localStorage
+        // Verify if this character is already saved in localStorage favorites
         verificarFavoritoLocal(personaje.id);
 
-        // LLAMADA AL ENDPOINT 3 para consultar la lista de episodios
+        // Call Endpoint 3 to fetch the list of episodes
         if (personaje.episode && personaje.episode.length > 0) {
             cargarEpisodios(personaje.episode);
         } else {
-            contadorEpisodios.textContent = '0 episodios registrados';
-            listaEpisodios.innerHTML = '<p style="color: #94a3b8;">No se registraron episodios para este personaje.</p>';
+            contadorEpisodios.textContent = '0 episodes recorded';
+            listaEpisodios.innerHTML = '<p style="color: #94a3b8;">No episodes recorded for this character.</p>';
             seccionEpisodios.style.display = 'block';
         }
 
     } catch (error) {
-        console.error('Error al consultar Endpoint 2:', error);
-        mostrarError('No se pudo obtener la información del personaje desde la API.');
+        console.error('Error querying Endpoint 2:', error);
+        mostrarError('Could not retrieve character information from the API.');
     }
 }
 
 // ==========================================================================
-// 3. RENDERIZADO DE LA FICHA TÉCNICA
+// 3. TECHNICAL SPECIFICATIONS RENDERING
 // ==========================================================================
 
 function renderizarFichaTecnica(personaje) {
-    document.title = `${personaje.name} - Detalle del Personaje`;
+    document.title = `${personaje.name} - Character Details`;
     detalleNombre.textContent = personaje.name;
-    detalleSubtitulo.textContent = 'Ficha técnica detallada e historial de episodios en el multiverso';
+    detalleSubtitulo.textContent = 'Detailed character specifications and multiverse episode appearances';
 
     personajeFoto.src = personaje.image;
-    personajeFoto.alt = `Retrato de ${personaje.name}`;
+    personajeFoto.alt = `Portrait of ${personaje.name}`;
     personajeNombreH2.textContent = personaje.name;
 
     const estadoMin = (personaje.status || 'unknown').toLowerCase();
@@ -184,59 +184,59 @@ function renderizarFichaTecnica(personaje) {
     personajeEstadoBadge.className = `estado-flotante ${claseEstado}`;
     personajeEstadoBadge.textContent = textoEstado;
 
-    personajeEspecie.textContent = personaje.species || 'No especificada';
+    personajeEspecie.textContent = personaje.species || 'Not specified';
     personajeGenero.textContent = traducirGenero(personaje.gender);
-    personajeTipo.textContent = personaje.type ? personaje.type : 'Ninguno (Estándar)';
+    personajeTipo.textContent = personaje.type ? personaje.type : 'None (Standard)';
     personajeOrigen.textContent = personaje.origin?.name || 'Desconocido';
     personajeUbicacion.textContent = personaje.location?.name || 'Desconocida';
-    personajeTotalEpisodios.textContent = `${personaje.episode?.length || 0} episodio(s)`;
+    personajeTotalEpisodios.textContent = `${personaje.episode?.length || 0} episode(s)`;
 
     cargandoDetalle.style.display = 'none';
     fichaTecnica.style.display = 'grid';
 }
 
 // ==========================================================================
-// 4. CONSULTA DE EPISODIOS (ENDPOINT 3: GET /api/episode/{ids})
+// 4. EPISODES QUERY (ENDPOINT 3: GET /api/episode/{ids})
 // ==========================================================================
 
 async function cargarEpisodios(urlsEpisodios) {
     seccionEpisodios.style.display = 'block';
-    contadorEpisodios.textContent = 'Consultando episodios...';
+    contadorEpisodios.textContent = 'Consulting episodes...';
     listaEpisodios.innerHTML = `
         <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
             <div class="spinner"></div>
-            <p style="color: #94a3b8; font-size: 0.9rem;">Obteniendo información de episodios desde la API...</p>
+            <p style="color: #94a3b8; font-size: 0.9rem;">Fetching episode details from API...</p>
         </div>
     `;
 
     try {
-        // Extraer los IDs de cada URL (ej. "https://rickandmortyapi.com/api/episode/1" -> "1")
+        // Extract IDs from each URL (e.g., "https://rickandmortyapi.com/api/episode/1" -> "1")
         const ids = urlsEpisodios
             .map(url => url.split('/').filter(Boolean).pop())
             .filter(Boolean);
 
         if (ids.length === 0) return;
 
-        // LLAMADA DIRECTA AL ENDPOINT 3: consulta múltiple por IDs separados por coma
+        // Direct request to Endpoint 3: comma-separated batch ID query
         const endpointUrl = `${API_BASE}/episode/${ids.join(',')}`;
         const respuesta = await fetch(endpointUrl);
 
         if (!respuesta.ok) {
-            throw new Error(`Error HTTP al consultar episodios: ${respuesta.status}`);
+            throw new Error(`HTTP Error fetching episodes: ${respuesta.status}`);
         }
 
         const data = await respuesta.json();
         const episodios = Array.isArray(data) ? data : [data];
 
-        contadorEpisodios.textContent = `${episodios.length} episodio(s) encontrado(s)`;
+        contadorEpisodios.textContent = `${episodios.length} episode(s) found`;
         renderizarListaEpisodios(episodios);
 
     } catch (error) {
-        console.error('Error al consultar Endpoint 3:', error);
-        contadorEpisodios.textContent = 'Error al cargar';
+        console.error('Error querying Endpoint 3:', error);
+        contadorEpisodios.textContent = 'Error loading';
         listaEpisodios.innerHTML = `
             <p style="color: #f87171; grid-column: 1 / -1;">
-                No se pudieron obtener los detalles de los episodios desde la API.
+                Could not fetch episode details from the API.
             </p>
         `;
     }
@@ -251,7 +251,7 @@ function renderizarListaEpisodios(episodios) {
         item.innerHTML = `
             <span class="episodio-codigo">${ep.episode}</span>
             <h4 class="episodio-titulo">${ep.name}</h4>
-            <span class="episodio-fecha">Emisión: ${ep.air_date || 'N/D'}</span>
+            <span class="episodio-fecha">Air date: ${ep.air_date || 'N/A'}</span>
         `;
         listaEpisodios.appendChild(item);
     });
@@ -300,5 +300,5 @@ function mostrarToast(mensaje, tipo = 'exito') {
     }, 2800);
 }
 
-// Iniciar carga de detalles
+// Initialize character detail loading
 cargarDetallePersonaje();

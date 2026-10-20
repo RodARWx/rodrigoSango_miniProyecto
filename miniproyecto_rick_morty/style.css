@@ -1,5 +1,5 @@
 /* ==========================================================================
-   SISTEMA DE DISEÑO RESPONSIVO - RICK AND MORTY FULL-STACK (POSTGRESQL & API)
+   RESPONSIVE DESIGN SYSTEM - RICK AND MORTY FULL-STACK (POSTGRESQL & API)
    ========================================================================== */
 
 :root {
@@ -42,7 +42,7 @@ body {
 }
 
 /* ==========================================================================
-   NAVEGACIÓN SUPERIOR Y ESTADO DEL BACKEND
+   TOP NAVIGATION AND BACKEND STATUS
    ========================================================================== */
 .barra-navegacion {
     background-color: rgba(10, 15, 29, 0.95);
@@ -165,7 +165,7 @@ body {
 }
 
 /* ==========================================================================
-   HERO / ENCABEZADO
+   HERO / HEADER
    ========================================================================== */
 .hero-header {
     background: radial-gradient(circle at 50% 0%, #1e3a8a 0%, #0a0f1d 75%);
@@ -210,7 +210,7 @@ body {
 }
 
 /* ==========================================================================
-   CONTENEDOR PRINCIPAL
+   MAIN CONTAINER
    ========================================================================== */
 .contenedor {
     max-width: 1200px;
@@ -226,7 +226,7 @@ body {
 }
 
 /* ==========================================================================
-   PESTAÑAS DE NAVEGACIÓN (SEGMENTED TABS)
+   NAVIGATION TABS (SEGMENTED TABS)
    ========================================================================== */
 .tabs-navegacion {
     display: flex;
@@ -271,7 +271,7 @@ body {
 }
 
 /* ==========================================================================
-   PANEL DE BÚSQUEDA Y FILTROS (SIN TEMPORIZADORES ARTIFICIALES)
+   SEARCH AND FILTER PANEL
    ========================================================================== */
 .seccion-busqueda {
     background-color: var(--color-fondo-alt);
@@ -414,7 +414,7 @@ body {
     to { transform: rotate(360deg); }
 }
 
-/* Botones */
+/* Buttons */
 .btn {
     padding: 0.75rem 1.4rem;
     border-radius: 8px;
@@ -452,7 +452,7 @@ body {
     color: white;
 }
 
-/* Barra de Filtros (Flexbox) */
+/* Filter Bar (Flexbox) */
 .barra-filtros {
     display: flex;
     flex-wrap: wrap;
@@ -500,7 +500,7 @@ body {
 }
 
 /* ==========================================================================
-   CUADRÍCULA DE PERSONAJES (CSS GRID RESPONSIVO)
+   CHARACTER GRID (RESPONSIVE CSS GRID)
    ========================================================================== */
 .grid-personajes {
     display: grid;
@@ -547,7 +547,7 @@ body {
     transform: scale(1.05);
 }
 
-/* Botón flotante de Favorito en tarjeta */
+/* Floating Favorite Button on Card */
 .btn-favorito-tarjeta {
     position: absolute;
     top: 10px;
@@ -580,7 +580,7 @@ body {
     background-color: rgba(245, 158, 11, 0.2);
 }
 
-/* Badges de estado */
+/* Status Badges */
 .badge-estado {
     position: absolute;
     bottom: 12px;
@@ -665,7 +665,7 @@ body {
 }
 
 /* ==========================================================================
-   PAGINACIÓN
+   PAGINATION
    ========================================================================== */
 .paginacion-barra {
     display: flex;
@@ -699,7 +699,7 @@ body {
 }
 
 /* ==========================================================================
-   VISTA DE DETALLE (FICHA TÉCNICA Y EPISODIOS)
+   DETAIL VIEW (PROFILE & EPISODES)
    ========================================================================== */
 .vista-detalle {
     display: flex;
@@ -829,7 +829,7 @@ body {
     color: white;
 }
 
-/* Sección de Episodios (Endpoint 3) */
+/* Episodes Section (Endpoint 3) */
 .seccion-episodios {
     background-color: var(--color-fondo-alt);
     border: 1px solid var(--color-borde);
@@ -901,7 +901,7 @@ body {
 }
 
 /* ==========================================================================
-   ESTADOS DE CARGA Y VACÍO
+   LOADING AND EMPTY STATES
    ========================================================================== */
 .estado-mensaje {
     text-align: center;
@@ -913,7 +913,7 @@ body {
 }
 
 /* ==========================================================================
-   TOASTS DE NOTIFICACIÓN FLOTANTE (FEEDBACK DE BASE DE DATOS)
+   FLOATING NOTIFICATION TOASTS
    ========================================================================== */
 .toast-contenedor {
     position: fixed;

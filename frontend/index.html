@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Portal de gestión y consulta de estudiantes con búsqueda en tiempo real">
     <title>Portal Estudiantes - Consultas y Catálogo</title>
-    <!-- Hoja de estilos con CSS Grid, Flexbox y Media Queries -->
+    <!-- Stylesheet with CSS Grid, Flexbox, and Media Queries -->
     <link rel="stylesheet" href="style.css">
-    <!-- Fuente moderna desde Google Fonts -->
+    <!-- Modern typography from Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -16,8 +16,7 @@
 
 <body>
 
-    <!-- Barra de Navegación entre Página 1 y Página 2 -->
-    <!-- Barra de Navegación entre Pestañas -->
+    <!-- Top Navigation Bar between tabs -->
     <nav class="barra-navegacion">
         <div class="nav-contenedor">
             <span class="logo">Sistema Académico</span>
@@ -34,7 +33,7 @@
         </div>
     </nav>
 
-    <!-- Encabezado de la página -->
+    <!-- Page hero header -->
     <header class="hero-header">
         <div class="contenedor">
             <h1 id="titulo-hero">Catálogo y Consulta de Estudiantes</h1>
@@ -43,9 +42,9 @@
 
     <main class="contenedor principal">
 
-        <!-- Vista 1: Consultas y Búsqueda (Buscador + Catálogo de Tarjetas) -->
+        <!-- View 1: Queries and Search (Search bar + Student Cards Catalog) -->
         <div id="vista-consultas" class="vista-pestaña">
-            <!-- Barra de Búsqueda con Sugerencias y Filtros en Servidor -->
+            <!-- Search Bar with real-time suggestions and server-side filters -->
             <section id="seccion-busqueda" class="seccion-busqueda">
                 <div class="buscador-cabecera">
                     <h2>Consulta de Estudiantes</h2>
@@ -55,7 +54,7 @@
                 <div class="buscador-envoltura">
                     <input type="search" id="input-busqueda" placeholder="Escribe para buscar por nombre, curso o correo..."
                         autocomplete="off" aria-label="Buscar estudiantes">
-                    <!-- Menú flotante de sugerencias en tiempo real -->
+                    <!-- Floating real-time suggestions dropdown -->
                     <ul id="lista-sugerencias" class="menu-sugerencias" aria-live="polite"></ul>
                 </div>
 
@@ -66,7 +65,7 @@
                     <span class="flecha-toggle">▼</span>
                 </button>
 
-                <!-- Barra de filtros y ordenamiento en servidor para alta escala -->
+                <!-- Filter and server-side sorting bar for scalability -->
                 <div class="barra-filtros">
                     <div class="filtro-grupo">
                         <label for="filtro-curso">Filtrar por curso:</label>
@@ -97,13 +96,13 @@
                 </div>
             </section>
 
-            <!-- Cuadrícula responsiva de Tarjetas y Barra de Paginación -->
+            <!-- Responsive student cards grid and pagination bar -->
             <section class="seccion-catalogo">
                 <div id="lista-estudiantes" class="grid-tarjetas">
-                    <!-- Inyectado dinámicamente desde app.js -->
+                    <!-- Dynamically injected from app.js -->
                 </div>
 
-                <!-- Paginación dinámica (Server-side) -->
+                <!-- Dynamic server-side pagination bar -->
                 <div id="paginacion-contenedor" class="paginacion-barra">
                     <button id="btn-pagina-anterior" class="btn btn-paginacion" disabled>&laquo; Anterior</button>
                     <span id="info-paginacion" class="info-paginacion">Página 1 de 1</span>
@@ -112,7 +111,7 @@
             </section>
         </div>
 
-        <!-- Vista 2: Formulario de Registro (Oculto en la pestaña de consultas) -->
+        <!-- View 2: Registration Form (Hidden on the queries tab) -->
         <div id="vista-registro" class="vista-pestaña" style="display: none;">
             <section id="seccion-formulario" class="tarjeta-panel formulario-panel">
                 <h2>Registrar Nuevo Estudiante</h2>
@@ -141,7 +140,7 @@
                             <span class="subtexto-label">Elige un avatar predeterminado con un clic:</span>
                         </div>
                         <div class="selector-avatares" id="selector-avatares-registro" role="radiogroup" aria-label="Seleccionar avatar predeterminado">
-                            <!-- Inyectado dinámicamente con app.js -->
+                            <!-- Dynamically injected via app.js -->
                         </div>
                         
                         <div class="opcion-url-envoltura">
@@ -178,7 +177,7 @@
         <p>© 2026 Sistema de Estudiantes - Programación Web</p>
     </footer>
 
-    <!-- Modal de Edición (PUT) -->
+    <!-- Edit Student Modal (PUT) -->
     <div id="modal-edicion" class="modal-envoltura" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
         <div class="modal-backdrop" id="modal-backdrop"></div>
         <div class="modal-dialogo">
@@ -213,7 +212,7 @@
                         <span class="subtexto-label">Elige un avatar predeterminado con un clic:</span>
                     </div>
                     <div class="selector-avatares" id="selector-avatares-edicion" role="radiogroup" aria-label="Seleccionar avatar de edición">
-                        <!-- Inyectado dinámicamente con app.js -->
+                        <!-- Dynamically injected via app.js -->
                     </div>
 
                     <div class="opcion-url-envoltura">

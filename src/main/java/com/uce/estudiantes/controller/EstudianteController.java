@@ -16,8 +16,8 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Controlador RESTful para gestionar las operaciones CRUD y consultas paginadas de Estudiantes.
- * Diseñado para soportar grandes volúmenes de datos con paginación, filtros y validaciones integrales.
+ * RESTful controller for managing CRUD operations and paginated student queries.
+ * Designed to support large volumes of data with server-side pagination, filtering, and comprehensive validation.
  */
 @RestController
 @RequestMapping("/api/estudiantes")
@@ -31,13 +31,13 @@ public class EstudianteController {
     }
 
     /**
-     * Valida integralmente los campos de un estudiante tanto para registro (POST) como actualización (PUT).
-     * Retorna un mapa con los errores encontrados por campo.
+     * Comprehensively validates student fields for both creation (POST) and update (PUT).
+     * Returns a map containing discovered validation errors per field.
      */
     private Map<String, String> validarDatosEstudiante(Estudiante estudiante, Long idExistente) {
         Map<String, String> errores = new LinkedHashMap<>();
 
-        // 1. Validar Nombre
+        // 1. Validate full name
         if (estudiante.getNombre() == null || estudiante.getNombre().trim().isEmpty()) {
             errores.put("nombre", "El nombre completo es obligatorio.");
         } else {
@@ -51,7 +51,7 @@ public class EstudianteController {
             }
         }
 
-        // 2. Validar Correo electrónico
+        // 2. Validate email address
         if (estudiante.getCorreo() == null || estudiante.getCorreo().trim().isEmpty()) {
             errores.put("correo", "El correo electrónico es obligatorio.");
         } else {
@@ -59,7 +59,7 @@ public class EstudianteController {
             if (!correo.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
                 errores.put("correo", "El formato del correo no es válido (ejemplo: usuario@uce.edu.ec).");
             } else {
-                // Verificar si ya existe en otro registro
+                // Check if email already belongs to another student record
                 Optional<Estudiante> existente = estudianteRepository.findByCorreo(correo);
                 if (existente.isPresent() && (idExistente == null || !existente.get().getId().equals(idExistente))) {
                     errores.put("correo", "El correo '" + correo + "' ya se encuentra registrado por otro estudiante.");
@@ -67,7 +67,7 @@ public class EstudianteController {
             }
         }
 
-        // 3. Validar Curso
+        // 3. Validate course
         if (estudiante.getCurso() == null || estudiante.getCurso().trim().isEmpty()) {
             errores.put("curso", "El curso o paralelo es obligatorio.");
         } else {
@@ -79,12 +79,12 @@ public class EstudianteController {
             }
         }
 
-        // 4. Validar Descripción
+        // 4. Validate description
         if (estudiante.getDescripcion() != null && estudiante.getDescripcion().trim().length() > 500) {
             errores.put("descripcion", "La descripción no puede exceder los 500 caracteres.");
         }
 
-        // 5. Validar URL de imagen si se proporciona
+        // 5. Validate image URL if provided
         if (estudiante.getImageUrl() != null && !estudiante.getImageUrl().trim().isEmpty()) {
             String url = estudiante.getImageUrl().trim();
             if (url.length() > 500) {
@@ -99,7 +99,7 @@ public class EstudianteController {
 
     /**
      * GET /api/estudiantes
-     * Retorna un listado paginado y filtrado en servidor.
+     * Returns a paginated and filtered list from the server.
      */
     @GetMapping
     public ResponseEntity<Page<Estudiante>> listarEstudiantes(
@@ -127,7 +127,7 @@ public class EstudianteController {
 
     /**
      * GET /api/estudiantes/todos
-     * Retorna todos los estudiantes sin paginación (para autocompletado y respaldos).
+     * Returns all students without pagination (for autocomplete caches and backups).
      */
     @GetMapping("/todos")
     public ResponseEntity<List<Estudiante>> listarTodos() {
@@ -136,7 +136,7 @@ public class EstudianteController {
 
     /**
      * GET /api/estudiantes/cursos
-     * Retorna la lista única de cursos registrados para alimentar filtros dinámicos.
+     * Returns the distinct list of courses to populate dynamic filter dropdowns.
      */
     @GetMapping("/cursos")
     public ResponseEntity<List<String>> listarCursos() {
@@ -145,7 +145,7 @@ public class EstudianteController {
 
     /**
      * GET /api/estudiantes/sugerencias?q=...
-     * Retorna hasta 5 sugerencias rápidas desde el servidor para autocompletado.
+     * Returns up to 5 fast autocomplete suggestions from the server.
      */
     @GetMapping("/sugerencias")
     public ResponseEntity<List<Estudiante>> obtenerSugerencias(@RequestParam(defaultValue = "") String q) {
@@ -158,7 +158,7 @@ public class EstudianteController {
 
     /**
      * GET /api/estudiantes/{id}
-     * Retorna un estudiante específico por su ID.
+     * Returns a specific student by ID.
      */
     @GetMapping("/{id}")
     public ResponseEntity<Estudiante> obtenerEstudiantePorId(@PathVariable Long id) {
@@ -169,7 +169,7 @@ public class EstudianteController {
 
     /**
      * POST /api/estudiantes
-     * Registra un nuevo estudiante tras validar exhaustivamente sus datos.
+     * Registers a new student after thorough input validation.
      */
     @PostMapping
     public ResponseEntity<?> registrarEstudiante(@RequestBody Estudiante estudiante) {
@@ -178,7 +178,7 @@ public class EstudianteController {
             return ResponseEntity.badRequest().body(errores);
         }
 
-        // Sanitizar y guardar
+        // Sanitize and save
         estudiante.setNombre(estudiante.getNombre().trim());
         estudiante.setCorreo(estudiante.getCorreo().trim().toLowerCase());
         estudiante.setCurso(estudiante.getCurso().trim());
@@ -195,7 +195,7 @@ public class EstudianteController {
 
     /**
      * PUT /api/estudiantes/{id}
-     * Actualiza la información de un estudiante existente tras validar sus datos.
+     * Updates an existing student after thorough input validation.
      */
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizarEstudiante(
@@ -233,7 +233,7 @@ public class EstudianteController {
 
     /**
      * DELETE /api/estudiantes/{id}
-     * Elimina un estudiante por su ID.
+     * Deletes a student by ID.
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarEstudiante(@PathVariable Long id) {

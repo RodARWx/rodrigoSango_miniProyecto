@@ -14,7 +14,7 @@
 
 <body>
 
-    <!-- Barra de Navegación -->
+    <!-- Navigation Bar -->
     <nav class="barra-navegacion">
         <div class="nav-contenedor">
             <div class="marca-contenedor">
@@ -34,7 +34,7 @@
         </div>
     </nav>
 
-    <!-- Encabezado Hero -->
+    <!-- Hero Header -->
     <header class="hero-header">
         <div class="contenedor">
             <h1>Explorador del Multiverso</h1>
@@ -44,7 +44,7 @@
 
     <main class="contenedor principal">
 
-        <!-- Panel de Pestañas Principales (Catálogo vs Favoritos) -->
+        <!-- Main Navigation Tabs (Catalog vs Favorites) -->
         <div class="tabs-navegacion">
             <button type="button" id="tab-catalogo" class="tab-item activo">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -63,14 +63,14 @@
             </button>
         </div>
 
-        <!-- Panel de Búsqueda y Filtros -->
+        <!-- Search and Filter Panel -->
         <section class="seccion-busqueda" id="seccion-filtros-catalogo">
             <div class="buscador-cabecera">
                 <h2 id="titulo-vista">Explorar Personajes de la Serie</h2>
                 <span id="contador-resultados" class="badge-contador">Cargando personajes...</span>
             </div>
 
-            <!-- Entrada de búsqueda con círculo de carga natural -->
+            <!-- Search input with animated loading spinner -->
             <div class="buscador-envoltura">
                 <div class="input-contenedor-icono">
                     <svg class="icono-lupa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -80,7 +80,7 @@
                     <input type="search" id="input-busqueda" placeholder="Buscar por nombre (ej. Rick Sanchez, Morty Smith, Summer, Beth)..."
                         autocomplete="off" aria-label="Buscar personajes">
                     
-                    <!-- Círculo de carga natural (Spinner animado fluido) -->
+                    <!-- Circular loading spinner -->
                     <div id="spinner-busqueda" class="spinner-circular-mini" style="display: none;" title="Buscando en la API..."></div>
                 </div>
             </div>
@@ -92,7 +92,7 @@
                 <span class="flecha-toggle">▼</span>
             </button>
 
-            <!-- Filtros combinados de la API -->
+            <!-- Combined API Filters -->
             <div class="barra-filtros">
                 <div class="filtro-grupo">
                     <label for="filtro-estado">Estado:</label>
@@ -121,13 +121,13 @@
             </div>
         </section>
 
-        <!-- Cuadrícula Responsiva de Personajes (CSS Grid) -->
+        <!-- Responsive Character Cards Grid (CSS Grid) -->
         <section class="seccion-catalogo">
             <div id="grid-personajes" class="grid-personajes">
-                <!-- Se inyecta dinámicamente desde app.js -->
+                <!-- Dynamically injected from app.js -->
             </div>
 
-            <!-- Paginación dinámica (solo activa en vista de catálogo API) -->
+            <!-- Dynamic pagination controls -->
             <div id="paginacion-contenedor" class="paginacion-barra">
                 <button id="btn-pagina-anterior" class="btn btn-paginacion" disabled>&laquo; Anterior</button>
                 <span id="info-paginacion" class="info-paginacion">Página 1 de 1</span>
@@ -137,7 +137,7 @@
 
     </main>
 
-    <!-- Contenedor flotante para notificaciones Toast -->
+    <!-- Floating container for Toast notifications -->
     <div id="toast-contenedor" class="toast-contenedor" aria-live="polite"></div>
 
     <footer class="footer">

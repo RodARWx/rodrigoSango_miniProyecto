@@ -1,3 +1,7 @@
+-- ==============================================================================
+-- Initial Mock Data Seed Script for Students Database
+-- ==============================================================================
+
 UPDATE estudiantes SET 
   descripcion = 'Entusiasta de programacion web y backend con Spring Boot.',
   image_url = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&auto=format&fit=crop&q=80'

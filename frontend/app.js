@@ -1,9 +1,9 @@
 // ==========================================================================
-// CONFIGURACIÓN Y ESTADO GLOBAL (Diseñado para grandes volúmenes de datos)
+// CONFIGURATION & GLOBAL STATE (Designed for scalability)
 // ==========================================================================
 const API_URL = 'http://localhost:8080/api/estudiantes';
 
-// Catálogo de Avatares Predeterminados (diseños sobrios y estables)
+// Preset Avatars Catalog (clean, consistent designs)
 const AVATARES_PREDETERMINADOS = [
     { id: 'av-1', url: 'https://api.dicebear.com/7.x/personas/svg?seed=Ana&backgroundColor=b6e3f4', label: 'Estudiante 1' },
     { id: 'av-2', url: 'https://api.dicebear.com/7.x/personas/svg?seed=Carlos&backgroundColor=c0aede', label: 'Estudiante 2' },
@@ -15,7 +15,7 @@ const AVATARES_PREDETERMINADOS = [
     { id: 'av-8', url: 'https://api.dicebear.com/7.x/personas/svg?seed=Andres&backgroundColor=d1d4f9', label: 'Estudiante 8' }
 ];
 
-// Estado de paginación y filtros en el servidor
+// Pagination and server-side filter state
 let paginaActual = 0;
 let totalPaginas = 1;
 let totalElementos = 0;
@@ -24,9 +24,9 @@ let terminoBusqueda = '';
 let cursoSeleccionado = '';
 let ordenSeleccionado = 'id,desc';
 let debounceTimer = null;
-let cacheEstudiantes = []; // Caché en memoria para autocompletado instantáneo (0ms)
+let cacheEstudiantes = []; // In-memory cache for instant autocomplete (0ms)
 
-// Elementos del DOM - Búsqueda, Filtros y Paginación
+// DOM Elements - Search, Filters, and Pagination
 const listaContenedor = document.getElementById('lista-estudiantes');
 const inputBusqueda = document.getElementById('input-busqueda');
 const listaSugerencias = document.getElementById('lista-sugerencias');
@@ -38,7 +38,7 @@ const btnPaginaAnterior = document.getElementById('btn-pagina-anterior');
 const btnPaginaSiguiente = document.getElementById('btn-pagina-siguiente');
 const infoPaginacion = document.getElementById('info-paginacion');
 
-// Elementos del DOM - Navegación por Pestañas
+// DOM Elements - Tab Navigation
 const tabConsultas = document.getElementById('tab-consultas');
 const tabRegistro = document.getElementById('tab-registro');
 const vistaConsultas = document.getElementById('vista-consultas');
@@ -46,7 +46,7 @@ const vistaRegistro = document.getElementById('vista-registro');
 const tituloHero = document.getElementById('titulo-hero');
 const formularioRegistro = document.getElementById('formulario-estudiante');
 
-// Elementos del DOM - Modal de Edición (PUT)
+// DOM Elements - Edit Modal (PUT)
 const modalEdicion = document.getElementById('modal-edicion');
 const modalBackdrop = document.getElementById('modal-backdrop');
 const btnCerrarModal = document.getElementById('btn-cerrar-modal');
@@ -54,7 +54,7 @@ const btnCancelarEdicion = document.getElementById('btn-cancelar-edicion');
 const formularioEdicion = document.getElementById('formulario-edicion');
 
 // ==========================================================================
-// 1. CARGA DE CURSOS Y PRECARGA DE DATOS
+// 1. COURSE LOADING & DATA PRELOADING
 // ==========================================================================
 async function cargarCursos() {
     try {
@@ -101,7 +101,7 @@ async function precargarEstudiantes() {
 }
 
 // ==========================================================================
-// 2. CONSULTA DE ESTUDIANTES CON PAGINACIÓN Y FILTROS EN SERVIDOR
+// 2. FETCH STUDENTS WITH PAGINATION AND SERVER-SIDE FILTERS
 // ==========================================================================
 async function obtenerEstudiantes(pagina = 0) {
     try {
@@ -128,7 +128,7 @@ async function obtenerEstudiantes(pagina = 0) {
 
         const data = await respuesta.json();
 
-        // Soporte tanto para Page<Estudiante> de Spring como para List<Estudiante> (retrocompatibilidad)
+        // Support both Spring's Page<Estudiante> and List<Estudiante> (backwards compatibility)
         let estudiantes = [];
         if (data.content !== undefined) {
             estudiantes = data.content;
@@ -167,7 +167,7 @@ async function obtenerEstudiantes(pagina = 0) {
             estudiantes = filtrados.slice(paginaActual * tamanoPagina, (paginaActual + 1) * tamanoPagina);
         }
 
-        // Mantener caché local enriquecido para autocompletado instantáneo
+        // Keep enriched local cache for instant autocomplete
         estudiantes.forEach(est => {
             const idx = cacheEstudiantes.findIndex(c => c.id === est.id);
             if (idx >= 0) {
@@ -208,7 +208,7 @@ function actualizarControlesPaginacion() {
 }
 
 // ==========================================================================
-// 3. RENDERIZADO DE TARJETAS
+// 3. STUDENT CARDS RENDERING
 // ==========================================================================
 function renderizarTarjetas(estudiantes) {
     listaContenedor.innerHTML = '';
@@ -226,7 +226,7 @@ function renderizarTarjetas(estudiantes) {
         const card = document.createElement('article');
         card.classList.add('tarjeta-estudiante');
 
-        // Avatar fallback si no tiene imagen definida
+        // Avatar fallback if no custom image is specified
         const imagenUrl = (estudiante.imageUrl && estudiante.imageUrl.trim() !== '')
             ? estudiante.imageUrl
             : `https://api.dicebear.com/7.x/personas/svg?seed=${encodeURIComponent(estudiante.nombre || 'estudiante')}&backgroundColor=b6e3f4`;
@@ -256,7 +256,7 @@ function renderizarTarjetas(estudiantes) {
 }
 
 // ==========================================================================
-// 4. BÚSQUEDA EN TIEMPO REAL CON SUGERENCIAS INSTANTÁNEAS Y DEBOUNCE
+// 4. REAL-TIME SEARCH WITH INSTANT SUGGESTIONS AND DEBOUNCE
 // ==========================================================================
 function resaltarTexto(texto, termino) {
     if (!termino || !texto) return texto || '';
@@ -301,7 +301,7 @@ inputBusqueda.addEventListener('input', (e) => {
         return;
     }
 
-    // Paso 1: Mostrar sugerencias de inmediato en 0ms
+    // Step 1: Display suggestions immediately at 0ms
     const coincidenciasLocales = buscarSugerenciasLocales(texto);
     if (coincidenciasLocales.length > 0) {
         mostrarSugerencias(coincidenciasLocales, texto);
@@ -309,7 +309,7 @@ inputBusqueda.addEventListener('input', (e) => {
         cerrarSugerencias();
     }
 
-    // Paso 2: Enriquecer desde el servidor en paralelo
+    // Step 2: Enrich from the server concurrently
     fetch(`${API_URL}/sugerencias?q=${encodeURIComponent(texto)}`)
         .then(res => res.ok ? res.json() : null)
         .then(sugerenciasServidor => {
@@ -322,7 +322,7 @@ inputBusqueda.addEventListener('input', (e) => {
         })
         .catch(() => {});
 
-    // Paso 3: Debounce para filtrar las tarjetas
+    // Step 3: Debounce card grid filtering
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => {
         terminoBusqueda = texto;
@@ -347,7 +347,7 @@ function seleccionarSugerencia(nombre) {
     cerrarSugerencias();
     clearTimeout(debounceTimer);
 
-    // Filtrado visual instantáneo en memoria
+    // Instant in-memory visual filtering
     if (cacheEstudiantes.length > 0) {
         const term = terminoBusqueda.toLowerCase();
         let filtrados = cacheEstudiantes.filter(est =>
@@ -389,7 +389,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ==========================================================================
-// 5. FILTROS, ORDENAMIENTO Y PAGINACIÓN
+// 5. FILTERS, SORTING, AND PAGINATION
 // ==========================================================================
 filtroCurso.addEventListener('change', (e) => {
     cursoSeleccionado = e.target.value;
@@ -419,7 +419,7 @@ btnPaginaSiguiente.addEventListener('click', () => {
 });
 
 // ==========================================================================
-// 6. SELECTOR INTERACTIVO DE AVATARES PREDETERMINADOS
+// 6. INTERACTIVE PRESET AVATARS SELECTOR
 // ==========================================================================
 function configurarSelectorAvatares(contenedorId, inputUrlId, wrapUrlId, toggleBtnId, valorInicial = '') {
     const contenedor = document.getElementById(contenedorId);
@@ -464,7 +464,7 @@ function configurarSelectorAvatares(contenedorId, inputUrlId, wrapUrlId, toggleB
             inputUrl.value = avatar.url;
             limpiarErrorCampo(inputUrl);
 
-            // Ocultar campo de URL personalizada si estaba abierto
+            // Hide custom URL input field if open
             if (wrapUrl) wrapUrl.style.display = 'none';
         });
 
@@ -472,7 +472,7 @@ function configurarSelectorAvatares(contenedorId, inputUrlId, wrapUrlId, toggleB
         contenedor.appendChild(item);
     });
 
-    // Si la imagen inicial era una URL externa personalizada, abrir el campo
+    // If initial image was a custom external URL, reveal input field
     if (esUrlPersonalizada && valorInicial && valorInicial.trim() !== '') {
         if (wrapUrl) wrapUrl.style.display = 'block';
     }
@@ -510,7 +510,7 @@ function configurarSelectorAvatares(contenedorId, inputUrlId, wrapUrlId, toggleB
 }
 
 // ==========================================================================
-// 7. MOTOR DE VALIDACIONES EN TIEMPO REAL
+// 7. REAL-TIME VALIDATION ENGINE
 // ==========================================================================
 function validarNombre(valor) {
     if (!valor || valor.trim() === '') return 'El nombre completo es obligatorio.';
@@ -586,22 +586,22 @@ function configurarValidacionesEnVivo(formId, prefijo = '') {
     const contadorDes = document.getElementById(prefijo ? `contador-${prefijo}-descripcion` : 'contador-descripcion');
 
     if (inputNom) {
-        // Bloquear activamente el ingreso de números (teclado físico y numérico)
+        // Actively block numeric input (physical and numeric keyboard)
         inputNom.addEventListener('keydown', (e) => {
-            if (e.ctrlKey || e.metaKey || e.altKey) return; // Permitir combinaciones como Ctrl+C, Ctrl+V, etc.
+            if (e.ctrlKey || e.metaKey || e.altKey) return; // Allow key combinations such as Ctrl+C, Ctrl+V, etc.
             if (e.key >= '0' && e.key <= '9') {
                 e.preventDefault();
             }
         });
 
-        // Bloquear en teclados móviles y autocompletado
+        // Block on mobile virtual keyboards and autofill
         inputNom.addEventListener('beforeinput', (e) => {
             if (e.data && /[0-9]/.test(e.data)) {
                 e.preventDefault();
             }
         });
 
-        // Limpiar automáticamente si se pega texto que contenga números
+        // Automatically strip numeric characters if pasted from clipboard
         inputNom.addEventListener('input', () => {
             if (/[0-9]/.test(inputNom.value)) {
                 const cursor = inputNom.selectionStart;
@@ -681,13 +681,13 @@ function validarFormularioCompleto(prefijo = '') {
 }
 
 // ==========================================================================
-// 8. REGISTRO DE ESTUDIANTE (POST) CON VALIDACIÓN Y FEEDBACK VISUAL
+// 8. STUDENT REGISTRATION (POST) WITH VALIDATION & VISUAL FEEDBACK
 // ==========================================================================
 formularioRegistro.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     if (!validarFormularioCompleto('')) {
-        return; // Detener envío si hay errores en el cliente
+        return; // Abort submission if client-side validation errors exist
     }
 
     const datosFormulario = new FormData(e.target);
@@ -714,7 +714,7 @@ formularioRegistro.addEventListener('submit', async (e) => {
             cambiarPestaña('consultas');
             obtenerEstudiantes(0);
         } else {
-            // Manejo de errores devueltos por el backend (HTTP 400 o 409)
+            // Handle backend validation or conflict errors (HTTP 400 or 409)
             const errorData = await res.json().catch(() => null);
             if (errorData && typeof errorData === 'object') {
                 Object.keys(errorData).forEach(campo => {
@@ -732,7 +732,7 @@ formularioRegistro.addEventListener('submit', async (e) => {
 });
 
 // ==========================================================================
-// 9. EDICIÓN DE ESTUDIANTE (PUT) CON MODAL Y VALIDACIÓN
+// 9. STUDENT EDITING (PUT) WITH MODAL & VALIDATION
 // ==========================================================================
 async function abrirModalEdicion(id) {
     try {
@@ -744,19 +744,19 @@ async function abrirModalEdicion(id) {
 
         const estudiante = await respuesta.json();
 
-        // Rellenar campos del modal
+        // Populate modal input fields
         document.getElementById('edit-id').value = estudiante.id;
         document.getElementById('edit-nombre').value = estudiante.nombre || '';
         document.getElementById('edit-correo').value = estudiante.correo || '';
         document.getElementById('edit-curso').value = estudiante.curso || '';
         document.getElementById('edit-descripcion').value = estudiante.descripcion || '';
 
-        // Limpiar errores visuales previos
+        // Clear previous visual validation errors
         ['edit-nombre', 'edit-correo', 'edit-curso', 'edit-imageUrl', 'edit-descripcion'].forEach(campo => {
             limpiarErrorCampo(document.getElementById(campo));
         });
 
-        // Configurar selector de avatares con la imagen actual
+        // Configure avatar selector with current student image
         configurarSelectorAvatares(
             'selector-avatares-edicion',
             'edit-imageUrl',
@@ -765,7 +765,7 @@ async function abrirModalEdicion(id) {
             estudiante.imageUrl || ''
         );
 
-        // Contador de caracteres
+        // Character counter
         const contador = document.getElementById('contador-edit-descripcion');
         if (contador) contador.textContent = `${(estudiante.descripcion || '').length} / 500`;
 
@@ -794,7 +794,7 @@ formularioEdicion.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     if (!validarFormularioCompleto('edit')) {
-        return; // Detener si hay errores cliente
+        return; // Abort if client validation errors exist
     }
 
     const id = document.getElementById('edit-id').value;
@@ -837,7 +837,7 @@ formularioEdicion.addEventListener('submit', async (e) => {
 });
 
 // ==========================================================================
-// 10. ELIMINAR ESTUDIANTE (DELETE)
+// 10. DELETE STUDENT (DELETE)
 // ==========================================================================
 async function eliminarEstudiante(id) {
     const confirmar = confirm('¿Está seguro de eliminar este estudiante?');
@@ -863,7 +863,7 @@ async function eliminarEstudiante(id) {
 }
 
 // ==========================================================================
-// 11. GESTIÓN DE PESTAÑAS (SPA)
+// 11. TAB MANAGEMENT (SPA)
 // ==========================================================================
 function cambiarPestaña(pestaña) {
     if (pestaña === 'registro') {
@@ -910,19 +910,20 @@ function sincronizarPestañaPorHash() {
 sincronizarPestañaPorHash();
 window.addEventListener('hashchange', sincronizarPestañaPorHash);
 
-// Exponer funciones globales a window para onclick en HTML
+// Expose global functions to window for HTML onclick attributes
 window.seleccionarSugerencia = seleccionarSugerencia;
 window.eliminarEstudiante = eliminarEstudiante;
 window.abrirModalEdicion = abrirModalEdicion;
 
 // ==========================================================================
-// 12. INICIALIZACIÓN
+// 12. APPLICATION INITIALIZATION
 // ==========================================================================
 cargarCursos();
 precargarEstudiantes();
 obtenerEstudiantes(0);
 
-// Configurar selectores de avatares y validaciones en tiempo real
+// Configure avatar selectors and real-time live validations
 configurarSelectorAvatares('selector-avatares-registro', 'imageUrl', 'wrap-url-registro', 'btn-toggle-url-registro');
 configurarValidacionesEnVivo('formulario-estudiante', '');
 configurarValidacionesEnVivo('formulario-edicion', 'edit');
+
