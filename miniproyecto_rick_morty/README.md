@@ -1,106 +1,275 @@
-# 🛸 Portal Rick & Morty - Explorador Web Client-Side
+# 🛸 Rick & Morty Portal - Pure Client-Side Web Explorer
 
-Aplicación web interactiva y **100% estática (Client-Side)** desarrollada con **HTML5, CSS3 y Vanilla JavaScript puro**, diseñada para consultar y explorar personajes y episodios del universo de *Rick and Morty* mediante el consumo directo de su API pública oficial ([rickandmortyapi.com](https://rickandmortyapi.com/)) y almacenamiento de favoritos en el navegador mediante **`localStorage`**.
-
----
-
-## ⚡ Características Principales
-
-1. **Arquitectura 100% Client-Side (Sin Servidor ni Base de Datos)**:
-   - Sin dependencias de Node.js, Express, Java ni bases de datos externas.
-   - Peticiones asíncronas directas al navegador con `fetch` y `async/await`.
-   - Lista para desplegarse de inmediato en cualquier servicio de hosting estático (GitHub Pages, Vercel, Netlify, Cloudflare Pages).
-
-2. **Persistencia Local con `localStorage`**:
-   - Guarda y elimina personajes favoritos directamente en el almacenamiento local del navegador (`localStorage`).
-   - Sincronización en tiempo real entre la vista del catálogo, la vista de detalle y la pestaña dedicada **"Mis Favoritos"**.
-   - Acceso instantáneo y offline a tus personajes guardados previamente.
-
-3. **Búsqueda Interactiva con Delay de 4.0 Segundos**:
-   - Tiempo de espera estricto de 4.0 segundos (`DELAY_MS = 4000`) mientras el usuario escribe en el catálogo para optimizar el consumo de la API.
-   - **Spinner animado circular fluido** que rota de forma natural durante la espera.
-   - Soporte de tecla <kbd>Enter</kbd> para ejecutar la consulta de manera inmediata sin esperar los 4 segundos.
-
-4. **Filtros Combinados y Paginación Dinámica**:
-   - Filtrado simultáneo por **Estado** (*Vivo*, *Muerto*, *Desconocido*) y **Género** (*Femenino*, *Masculino*, *Sin género*, *Desconocido*).
-   - Botón de limpieza rápida de filtros.
-   - Paginación dinámica en vivo con botones de página anterior/siguiente y conteo total.
-
-5. **Ficha Técnica y Detalle de Episodios**:
-   - Vista individual detallada (`detalle.html`) con especificaciones completas: especie, sub-tipo, origen y ubicación actual.
-   - Desglose estructurado de todos los episodios en los que participa el personaje con sus respectivos códigos de emisión (ej. `S01E01`), títulos y fechas de emisión.
-
-6. **Diseño Visual de Alta Fidelidad**:
-   - Sistema responsivo con **CSS Grid** y **Flexbox** optimizado para móviles, tablets y escritorios.
-   - Paleta de colores oscura inspirada en ciencia ficción con acentos cian y esmeralda.
-   - Tipografía moderna *Inter* de Google Fonts y notificaciones flotantes (Toasts).
+[![Vanilla JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![HTML5](https://img.shields.io/badge/HTML5-Semantic-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/)
+[![CSS3](https://img.shields.io/badge/CSS3-Responsive_Grid_Flex-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/)
+[![Storage: localStorage](https://img.shields.io/badge/Storage-localStorage-4CAF50?style=for-the-badge&logo=googlechrome&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
+[![External API: Rick & Morty](https://img.shields.io/badge/API-The_Rick_%26_Morty_API-00B5CC?style=for-the-badge)](https://rickandmortyapi.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 ---
 
-## 🎯 Los 3 Endpoints Oficiales Consumidos
-
-La aplicación consume exclusivamente **3 endpoints oficiales** directamente desde el navegador:
-
-| # | Endpoint Oficial | Método HTTP | Uso en la Aplicación |
-|---|---|:---:|---|
-| **1** | `https://rickandmortyapi.com/api/character/?name=...&status=...&gender=...&page=...` | `GET` | **Catálogo General y Búsqueda**: Filtrado por nombre, estado, género y paginación en vivo. |
-| **2** | `https://rickandmortyapi.com/api/character/{id}` | `GET` | **Ficha Técnica Individual**: Detalle completo del personaje por identificador único. |
-| **3** | `https://rickandmortyapi.com/api/episode/{ids}` | `GET` | **Historial de Episodios**: Consulta de nombres, códigos de temporada y fechas de emisión. |
+## 📋 Table of Contents
+1. [Project Overview & Architectural Refactoring](#-project-overview--architectural-refactoring)
+2. [Objectives](#-objectives)
+   - [General Objective](#general-objective)
+   - [Specific Objectives](#specific-objectives)
+3. [Scope of the System](#-scope-of-the-system)
+   - [Core Features](#core-features)
+   - [Boundaries & Constraints](#boundaries--constraints)
+4. [Project Directory Structure](#-project-directory-structure)
+5. [Technology Stack](#-technology-stack)
+6. [The 3 Official Endpoints Consumed](#-the-3-official-endpoints-consumed)
+7. [Client-Side Persistence (`localStorage`)](#-client-side-persistence-localstorage)
+8. [Prerequisites](#-prerequisites)
+9. [Execution Guide (How to Run the Application)](#-execution-guide-how-to-run-the-application)
+10. [Error Handling & User Feedback](#-error-handling--user-feedback)
+11. [Troubleshooting & FAQ](#-troubleshooting--faq)
+12. [Authors & Credits](#-authors--credits)
+13. [License](#-license)
 
 ---
 
-## 💾 Gestión de Favoritos con `localStorage`
+## 📖 Project Overview & Architectural Refactoring
 
-La persistencia de favoritos se gestiona bajo la clave `'rick_morty_favoritos'`:
+The **Rick & Morty Portal** is an interactive, **100% static client-side web application** built with semantic **HTML5**, modern **CSS3**, and pure **Vanilla ES6+ JavaScript**. It allows users to explore characters and episodes from the *Rick and Morty* universe by directly querying the official public REST API ([rickandmortyapi.com](https://rickandmortyapi.com/)) and persisting bookmarked favorites using browser-native **`localStorage`**.
 
-* **Guardar:** Al presionar la estrella (☆), el personaje se almacena como objeto JSON en el arreglo local y el botón pasa a estado activo (★).
-* **Eliminar:** Al presionar nuevamente la estrella activa (★), el personaje se remueve del arreglo en `localStorage`.
-* **Pestaña "Mis Favoritos":** Lee la colección almacenada localmente y permite buscar o filtrar dentro de tus favoritos de forma instantánea sin peticiones de red.
+### 💡 Architectural Context & Refactoring Justification
+In earlier iterations of this project, an intermediary backend layer (Node.js/Express and Java Spring Boot backed by PostgreSQL) was initially implemented. However, through architectural evaluation, it became evident that adding a custom backend and relational database was **unnecessary and redundant**, given that:
+1. The project consumes an **open, public, external REST API** that already handles querying, filtering, and indexing.
+2. Introducing an intermediary backend server introduced unnecessary latency, extra infrastructure overhead, database configuration hurdles, and redundant proxy hops.
+3. User personalization (bookmarking favorite characters) is private to the individual user session and does not require shared multi-user server synchronization.
+
+Consequently, in this **`refactor/rick-morty-mod`** branch, the application was refactored into a **pure client-side architecture**:
+- **Zero backend dependencies**: Node.js, Express, Java Spring Boot, and PostgreSQL dependencies were removed.
+- **Direct browser-to-API communication**: Asynchronous `fetch` calls with `async/await` query the external API directly.
+- **Native persistence**: Switched from PostgreSQL to browser **`localStorage`**, achieving instant sub-millisecond access, zero server setup, and seamless offline access to saved favorites.
+- **Instant deployment**: The app is ready to deploy on any static hosting provider (GitHub Pages, Vercel, Netlify, Cloudflare Pages) or run locally by opening `index.html`.
 
 ---
 
-## 📁 Estructura del Proyecto
+## 🎯 Objectives
+
+### General Objective
+To develop a high-performance, responsive, and serverless client-side web application that directly consumes the public Rick & Morty REST API under strict resource constraints and manages local state persistence seamlessly.
+
+### Specific Objectives
+- **Pure Web Standards**: Implement all UI components, routing, and dynamic data binding using pure Vanilla JavaScript, without relying on third-party frameworks or bundlers.
+- **Strict API Constraint Compliance**: Respect the architectural constraint of consuming **strictly three (3) official API endpoints**, orchestrating queries efficiently.
+- **User Experience Optimization**: Implement an intentional 4.0-second debounced search timer accompanied by a fluid rotating circular CSS spinner and instant <kbd>Enter</kbd> trigger.
+- **Efficient Client-Side Storage**: Build a resilient `localStorage` manager that serializes, synchronizes, and prevents duplicate bookmark entries.
+- **Modern Responsive Design**: Craft a sci-fi dark aesthetic with high contrast, responsive CSS Grid/Flexbox layouts, and animated feedback toasts.
+
+---
+
+## 🔭 Scope of the System
+
+### Core Features
+
+#### 1. Interactive Catalog & Live Filters
+- **Direct Catalog Querying**: Consumes Endpoint 1 to list characters with pagination.
+- **Combined Filtering**: Real-time filtering by **Status** (*Alive*, *Dead*, *Unknown*) and **Gender** (*Female*, *Male*, *Genderless*, *Unknown*).
+- **Fast Filter Reset**: One-click button (`btn-limpiar-filtros`) to reset all filters to default state.
+- **Live Pagination**: Server-side pagination controls (Previous/Next) displaying current page and total records count.
+
+#### 2. Search Engine with Strict 4.0s Delay & Spinner
+- **Strict Delay**: Enforces a strict 4.0-second delay (`DELAY_MS = 4000`) while typing in the search input to prevent excessive API requests.
+- **Natural Circular Rotating Spinner**: Fluid CSS keyframe animation (`spinner-rotatorio`) active during the 4-second wait, providing clear user feedback.
+- **Immediate Execution**: Pressing <kbd>Enter</kbd> bypasses the 4-second timer to fetch results immediately.
+
+#### 3. Character Technical Sheet & Episode Breakdown
+- **Dynamic Detail View (`detalle.html`)**: Reads character ID from URL query parameters (`?id=...`) and consumes Endpoint 2.
+- **Comprehensive Specs**: High-definition avatar, species, subtype, gender, origin dimension, current location, and alive/dead badge.
+- **Multi-Episode Fetching**: Gathers episode IDs associated with the character and queries Endpoint 3 in a single batch request to display episode titles, season/episode codes (e.g., `S01E01`), and original air dates.
+
+#### 4. Persistent Bookmarks ("My Favorites")
+- **Dual-State Star Toggle**: Click the star icon (☆ / ★) on any card or detail page to add or remove favorites.
+- **Dedicated Favorites Tab**: Displays all bookmarked characters loaded directly from `localStorage` without generating network traffic.
+- **Real-Time Badge Sync**: Navbar counter dynamically updates when favorites are added or removed.
+
+### Boundaries & Constraints
+- Only the **3 authorized endpoints** from `rickandmortyapi.com` are accessed.
+- Persistence is scoped to the client's browser; clearing browser data will reset saved favorites.
+- No Node.js runtime, build step (`npm run build`), or backend database is required to run this project.
+
+---
+
+## 📁 Project Directory Structure
 
 ```text
 miniproyecto_rick_morty/
-├── index.html       # Catálogo principal, buscador con delay 4s, filtros y pestaña de favoritos
-├── detalle.html     # Ficha técnica individual y desglose de episodios
-├── style.css        # Sistema de estilos responsivo, modo oscuro y animaciones de spinners
-├── app.js           # Lógica cliente: consumo del Endpoint 1, búsqueda, filtros y localStorage
-├── detalle.js       # Lógica cliente: consumo de Endpoints 2 y 3, y alternador de favoritos
-├── .gitignore       # Archivos y temporales ignorados por Git
-├── .vscode/         # Configuración del espacio de trabajo en VS Code
-└── README.md        # Documentación de la aplicación
+├── index.html       # Main character catalog, delayed search bar, filters, and favorites tab
+├── detalle.html     # Dedicated character technical sheet and episode listing view
+├── style.css        # Responsive stylesheet (dark theme, CSS Grid, Flexbox, spinner animations)
+├── app.js           # Client logic: Endpoint 1 consumption, 4.0s search timer, localStorage sync
+├── detalle.js       # Client logic: Endpoints 2 & 3 consumption, episode parsing, favorite toggle
+├── .gitignore       # Git ignore rules for system artifacts and editor caches
+└── README.md        # Technical project documentation (English)
 ```
 
 ---
 
-## 🚀 Cómo Ejecutar la Aplicación
+## 🛠️ Technology Stack
 
-Al ser una aplicación 100% estática, no requiere instalación de dependencias (`npm install`), compilación ni servidores backend.
-
-### Opción 1: Con la extensión Live Server de VS Code (Recomendada)
-1. Abre la carpeta del proyecto en Visual Studio Code.
-2. Haz clic derecho sobre el archivo [`index.html`](file:///c:/Users/braya/Documents/Septimo/Programción%20Web/miniproyecto_rick_morty/index.html).
-3. Selecciona **"Open with Live Server"**.
-
-### Opción 2: Abrir directamente en el navegador
-1. Haz doble clic en el archivo [`index.html`](file:///c:/Users/braya/Documents/Septimo/Programción%20Web/miniproyecto_rick_morty/index.html) desde tu explorador de archivos de Windows.
-2. La aplicación cargará directamente en tu navegador predeterminado (Chrome, Edge, Firefox, etc.).
-
-### Opción 3: Servidor estático por terminal
-Si cuentas con Node.js instalado y deseas servirlo por HTTP local:
-```bash
-npx serve .
-```
-O con Python:
-```bash
-python -m http.server 3000
-```
-Y abre [http://localhost:3000](http://localhost:3000) en tu navegador.
+| Technology | Purpose |
+|---|---|
+| **HTML5** | Semantic structure (`<header>`, `<main>`, `<section>`, `<article>`, `<nav>`) |
+| **CSS3** | Modern dark theme, CSS Custom Properties, CSS Grid, Flexbox, `@keyframes` |
+| **JavaScript (ES6+)** | Asynchronous networking (`fetch`, `async/await`), DOM manipulation, URLSearchParams |
+| **Web Storage API** | Browser-native `localStorage` for client-side persistence |
+| **Google Fonts (Inter)** | Clean, modern typography |
+| **The Rick & Morty API** | Official public data source ([rickandmortyapi.com](https://rickandmortyapi.com/)) |
 
 ---
 
-## 📄 Licencia
+## 🎯 The 3 Official Endpoints Consumed
 
-Desarrollado como proyecto para Programación Web. Datos e imágenes provistos por la [API pública de Rick and Morty](https://rickandmortyapi.com/).
+The application strictly queries **only three (3) official endpoints** directly from client-side JavaScript:
+
+| # | Endpoint URL | HTTP Method | Application Usage |
+|---|---|:---:|---|
+| **1** | `https://rickandmortyapi.com/api/character/?name={name}&status={status}&gender={gender}&page={page}` | `GET` | **Main Catalog & Search**: Queries characters with combined name, status, and gender filtering alongside live pagination. |
+| **2** | `https://rickandmortyapi.com/api/character/{id}` | `GET` | **Character Profile**: Retrieves detailed attributes for a single character (species, origin, location, episode list). |
+| **3** | `https://rickandmortyapi.com/api/episode/{ids}` | `GET` | **Episode History**: Fetches episode names, season codes (`SxxExx`), and air dates for all episodes featuring the selected character. |
+
+> [!IMPORTANT]
+> No other endpoints from the official API are requested, ensuring strict compliance with course project constraints.
+
+---
+
+## 💾 Client-Side Persistence (`localStorage`)
+
+All bookmarked favorite characters are stored locally under the key:
+```javascript
+const STORAGE_KEY_FAVORITOS = 'rick_morty_favoritos';
+```
+
+### Stored Record Data Structure
+Each bookmarked character is serialized as a JSON object:
+```json
+[
+  {
+    "id": 1,
+    "name": "Rick Sanchez",
+    "status": "Alive",
+    "species": "Human",
+    "gender": "Male",
+    "image": "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
+    "origin": { "name": "Earth (C-137)" },
+    "location": { "name": "Citadel of Ricks" }
+  }
+]
+```
+
+### Persistence Operations
+- **Save**: Adding a character appends it to the array, serialized via `JSON.stringify()`.
+- **Remove**: Deselecting the star filters the array by ID and updates storage.
+- **Sync**: Both `app.js` and `detalle.js` maintain an in-memory `Set` of active favorite IDs (`idsFavoritos`) to provide instant UI state reflection.
+
+---
+
+## ⚙️ Prerequisites
+
+Because this project is completely static and serverless:
+- **No Node.js or npm is required.**
+- **No Java JDK or Maven is required.**
+- **No PostgreSQL database service is required.**
+- **Requirement**: Any modern web browser (Google Chrome, Mozilla Firefox, Microsoft Edge, Safari, Brave).
+
+---
+
+## 🚀 Execution Guide (How to Run the Application)
+
+### Option 1: VS Code Live Server (Recommended)
+1. Open the repository in Visual Studio Code.
+2. Navigate to the `miniproyecto_rick_morty/` folder.
+3. Right-click on [`index.html`](file:///c:/Users/braya/Documents/Septimo/Programción%20Web/miniproyecto_plan_b/miniproyecto_rick_morty/index.html) and select **"Open with Live Server"**.
+4. The application will launch in your browser at `http://127.0.0.1:5500/index.html`.
+
+---
+
+### Option 2: Direct Browser Execution (Zero Setup)
+1. In your operating system's file explorer, navigate to:
+   ```text
+   miniproyecto_plan_b/miniproyecto_rick_morty/
+   ```
+2. Double-click [`index.html`](file:///c:/Users/braya/Documents/Septimo/Programción%20Web/miniproyecto_plan_b/miniproyecto_rick_morty/index.html).
+3. The application runs immediately in your default browser via the `file://` protocol.
+
+---
+
+### Option 3: Local HTTP Server via Terminal
+If you have Node.js or Python installed and prefer a terminal HTTP server:
+
+- **Using Node.js (`npx serve`)**:
+  ```bash
+  cd miniproyecto_rick_morty
+  npx serve .
+  ```
+- **Using Python 3**:
+  ```bash
+  cd miniproyecto_rick_morty
+  python -m http.server 3000
+  ```
+Open your browser at [http://localhost:3000](http://localhost:3000).
+
+---
+
+## 🛡️ Error Handling & User Feedback
+
+1. **404 Not Found (Search with No Results)**: When search or filter criteria match no characters, a styled empty-state message is displayed informing the user to refine keywords.
+2. **Network Disconnection / API Outages**: Network fetch failures are caught gracefully using `try...catch` blocks, triggering non-intrusive floating toast notifications (`toast-contenedor`).
+3. **Empty Favorites State**: When the "My Favorites" tab contains no saved characters, an intuitive guide invites the user to explore the catalog and click the star icon.
+4. **URL Parameter Validation**: If `detalle.html` is opened without a valid `?id=` parameter, a warning card prompts the user to return to the catalog.
+
+---
+
+## ❓ Troubleshooting & FAQ
+
+### 1. Do I need to run a PostgreSQL database or start a backend?
+**No.** In this branch (`refactor/rick-morty-mod`), all backend and database components were eliminated as unnecessary. The application directly consumes the public API and saves data into `localStorage`.
+
+### 2. Can I access my favorite characters on another browser or device?
+Because data is stored in `localStorage`, saved favorites belong to the specific browser and profile where they were created. They will persist across tab closes and computer restarts on that browser.
+
+### 3. Why does the search have a 4-second delay?
+The 4.0-second timer (`DELAY_MS = 4000`) is a strict pedagogical requirement for this project to demonstrate debounced API rate limiting. You can press <kbd>Enter</kbd> to execute the search immediately without waiting.
+
+---
+
+## 👥 Authors & Credits
+
+- **Developer**: Rodrigo Brayan Sango
+- **Course**: Web Programming - Seventh Semester
+- **Institution**: Universidad Central del Ecuador (UCE)
+- **External Data Source**: [The Rick and Morty API](https://rickandmortyapi.com/) created by Axel Fuhrmann.
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
+
+```text
+MIT License
+
+Copyright (c) 2026 Rodrigo Brayan Sango
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
