@@ -7,6 +7,7 @@
 [![Storage: localStorage](https://img.shields.io/badge/Storage-localStorage-4CAF50?style=for-the-badge&logo=googlechrome&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
 [![Documentation: English](https://img.shields.io/badge/Docs_%26_Comments-English_(WEB--6)-success?style=for-the-badge)](https://sistemas-uce.atlassian.net/browse/WEB-6)
 [![Chained API Join](https://img.shields.io/badge/Jira_Task-WEB--9:_Chained_API_Join-blueviolet?style=for-the-badge)](https://sistemas-uce.atlassian.net/browse/WEB-9)
+[![Modular Architecture](https://img.shields.io/badge/Jira_Task-WEB--11:_Modular_Architecture-0052CC?style=for-the-badge)](https://sistemas-uce.atlassian.net/browse/WEB-11)
 
 ---
 
@@ -22,10 +23,11 @@
 5. [Project Directory Structure](#-project-directory-structure)
 6. [Technology Stack](#-technology-stack)
 7. [Chained Multi-Service API Specifications (WEB-9)](#-chained-multi-service-api-specifications-web-9)
-8. [Responsive Design Specifications & Breakpoints](#-responsive-design-specifications--breakpoints)
-9. [Client-Side Persistence (`localStorage`)](#-client-side-persistence-localstorage)
-10. [Prerequisites](#-prerequisites)
-11. [Execution Guide (How to Run the Application)](#-execution-guide-how-to-run-the-application)
+8. [Modular Architecture & Shared ES Modules (WEB-11)](#-modular-architecture--shared-es-modules-web-11)
+9. [Responsive Design Specifications & Breakpoints](#-responsive-design-specifications--breakpoints)
+10. [Client-Side Persistence (`localStorage`)](#-client-side-persistence-localstorage)
+11. [Prerequisites](#-prerequisites)
+12. [Execution Guide (How to Run the Application)](#-execution-guide-how-to-run-the-application)
     - [Running with Live Server](#running-with-live-server)
     - [Direct Browser Execution](#direct-browser-execution)
     - [Testing Mobile Responsiveness in DevTools](#testing-mobile-responsiveness-in-devtools)
@@ -110,6 +112,13 @@ To provide a fast, responsive, fully internationalized client-side web applicati
 
 ```text
 miniproyecto_rick_morty/
+├── js/
+│   ├── api/
+│   │   └── rickMortyApi.js       # Pure ES module HTTP client (Character, Location, Episode APIs)
+│   ├── storage/
+│   │   └── favoritesStorage.js   # Decoupled localStorage persistence & bookmark normalizer
+│   └── utils/
+│       └── throttle.js           # Functional rate limiters (throttleLeading, throttle, debounce)
 ├── index.html       # Main character catalog with mobile hamburger, collapsible filters & jQuery CDN
 ├── detalle.html     # Character profile view with mobile responsive header & jQuery CDN
 ├── style.css        # Responsive stylesheet (dark sci-fi theme, hamburger icon, media queries)
@@ -127,7 +136,7 @@ miniproyecto_rick_morty/
 | Technology | Purpose |
 |---|---|
 | **jQuery 3.7.1** | Mobile hamburger animation, collapsible filters, smooth scroll-to-top, viewport adaptivity |
-| **Vanilla JavaScript (ES6+)** | API networking (`fetch`, `async/await`), DOM manipulation, URLSearchParams |
+| **Vanilla JavaScript (ES6+)** | API networking (`fetch`, `async/await`), DOM manipulation, URLSearchParams, ES Modules |
 | **HTML5** | Semantic web structure (`<header>`, `<main>`, `<section>`, `<article>`, `<nav>`) |
 | **CSS3** | Sci-fi dark palette, CSS Grid, Flexbox, custom properties, `@keyframes` |
 | **Web Storage API** | Browser-native `localStorage` for offline favorite characters |
@@ -156,6 +165,18 @@ The application combines and orchestrates the **three official resources** of th
 | **Throttle** | `window.on('resize')` | 100 ms | Regulates mobile/desktop viewport mode adaptation without CPU spiking. |
 | **Leading Throttle** | `btnPaginaAnterior`, `btnPaginaSiguiente` | 450 ms | Prevents API request flooding from rapid clicks on catalog pagination. |
 | **Leading Throttle** | Card & Detail Favorite buttons | 350–400 ms | Prevents double-click race conditions and duplicate writes to `localStorage`. |
+
+---
+
+## 🧱 Modular Architecture & Shared ES Modules (WEB-11)
+
+In **WEB-11**, monolithic script responsibilities were extracted into dedicated, reusable **ES6 pure modules** to satisfy the **Single Responsibility Principle (SRP)** and eliminate code duplication (DRY):
+
+| Module | Location | Primary Responsibilities | Zero-DOM Contract |
+|---|---|---|:---:|
+| **Storage Service** | `js/storage/favoritesStorage.js` | • Centralizes `localStorage` reading/writing under `rick_morty_favoritos`.<br>• Normalizes character attributes across schemas (`nombre`/`name`, `estado`/`status`, etc.).<br>• Exposes `getFavorites()`, `saveFavorites()`, `toggleFavorite()`, `isFavorite()`, `getFavoriteIds()`, `clearFavorites()`. | ✅ Yes |
+| **API Client** | `js/api/rickMortyApi.js` | • Encapsulates HTTP networking via native `fetch`.<br>• Standardizes query parameter construction via `URLSearchParams`.<br>• Uniform error handling and 404 normalization for empty filter results.<br>• Normalizes single vs batch episode responses into consistent Arrays.<br>• Exposes `getCharacters()`, `getCharacterById()`, `getLocation()`, `getEpisodes()`. | ✅ Yes |
+| **Functional Utils** | `js/utils/throttle.js` | • `throttleLeading(func, cooldownMs)`: Leading-edge throttle for interactive UI buttons.<br>• `throttle(func, limitMs)`: Interval throttle for high-frequency viewport & scroll events.<br>• `debounce(func, delayMs)`: Inactivity delay limiter with `.cancel()` capability. | ✅ Yes |
 
 ---
 
