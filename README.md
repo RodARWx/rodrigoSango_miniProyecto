@@ -136,7 +136,7 @@ miniproyecto_plan_b/ (Branch: feature/WEB-6-translate-documentation-comments-to-
 │   ├── app.js                                # Core application logic with English JSDoc comments
 │   └── responsive.js                         # jQuery responsiveness controller with English comments
 │
-└── miniproyecto_rick_morty/                  # Client-Side Rick & Morty App (Modular Architecture, WEB-11 & WEB-12)
+└── miniproyecto_rick_morty/                  # Client-Side Rick & Morty App (Modular Architecture, WEB-11 to WEB-14)
     ├── README.md                             # Subproject technical documentation (English)
     ├── js/                                   # Pure ES6 modular architecture (WEB-11 & WEB-12)
     │   ├── api/rickMortyApi.js               # Decoupled REST HTTP client (Character, Location, Episode APIs)
@@ -149,7 +149,7 @@ miniproyecto_plan_b/ (Branch: feature/WEB-6-translate-documentation-comments-to-
     ├── detalle.html                          # Single character detail view with responsive header & jQuery CDN
     ├── style.css                             # Cyber-themed responsive stylesheet
     ├── app.js                                # Modular catalog controller (ES Module - WEB-13)
-    ├── detalle.js                            # Detail logic with English comments
+    ├── detalle.js                            # Modular pipeline orchestrator (ES Module - WEB-14)
     ├── responsive.js                         # jQuery responsive controller with English comments
     └── .gitignore                            # Subproject git ignore rules
 ```
