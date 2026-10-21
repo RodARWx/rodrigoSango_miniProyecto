@@ -136,11 +136,14 @@ miniproyecto_plan_b/ (Branch: feature/WEB-6-translate-documentation-comments-to-
 │   ├── app.js                                # Core application logic with English JSDoc comments
 │   └── responsive.js                         # jQuery responsiveness controller with English comments
 │
-└── miniproyecto_rick_morty/                  # Client-Side Rick & Morty App (Modular Architecture, WEB-11)
+└── miniproyecto_rick_morty/                  # Client-Side Rick & Morty App (Modular Architecture, WEB-11 & WEB-12)
     ├── README.md                             # Subproject technical documentation (English)
-    ├── js/                                   # Pure ES6 modular architecture (WEB-11)
+    ├── js/                                   # Pure ES6 modular architecture (WEB-11 & WEB-12)
     │   ├── api/rickMortyApi.js               # Decoupled REST HTTP client (Character, Location, Episode APIs)
     │   ├── storage/favoritesStorage.js       # LocalStorage bookmark manager & data normalizer
+    │   ├── ui/                               # Presentation layer (WEB-12)
+    │   │   ├── renderers.js                  # Card, pagination & status template renderers
+    │   │   └── toast.js                      # Standalone floating notification dispatcher
     │   └── utils/throttle.js                 # Rate limiters (throttleLeading, throttle, debounce)
     ├── index.html                            # Character catalog with cyber hamburger & jQuery CDN
     ├── detalle.html                          # Single character detail view with responsive header & jQuery CDN

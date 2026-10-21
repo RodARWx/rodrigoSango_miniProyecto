@@ -1048,12 +1048,23 @@ body {
     max-width: 380px;
 }
 
-.toast.exito {
+.toast.exito,
+.toast.success {
     border-color: #10b981;
 }
 
-.toast.eliminar {
+.toast.eliminar,
+.toast.advertencia,
+.toast.warning {
     border-color: #f59e0b;
+}
+
+.toast.error {
+    border-color: #ef4444;
+}
+
+.toast.info {
+    border-color: #38bdf8;
 }
 
 @keyframes deslizarToast {

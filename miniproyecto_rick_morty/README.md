@@ -8,6 +8,7 @@
 [![Documentation: English](https://img.shields.io/badge/Docs_%26_Comments-English_(WEB--6)-success?style=for-the-badge)](https://sistemas-uce.atlassian.net/browse/WEB-6)
 [![Chained API Join](https://img.shields.io/badge/Jira_Task-WEB--9:_Chained_API_Join-blueviolet?style=for-the-badge)](https://sistemas-uce.atlassian.net/browse/WEB-9)
 [![Modular Architecture](https://img.shields.io/badge/Jira_Task-WEB--11:_Modular_Architecture-0052CC?style=for-the-badge)](https://sistemas-uce.atlassian.net/browse/WEB-11)
+[![UI Renderers & Toast](https://img.shields.io/badge/Jira_Task-WEB--12:_UI_Renderers_%26_Toast-0052CC?style=for-the-badge)](https://sistemas-uce.atlassian.net/browse/WEB-12)
 
 ---
 
@@ -117,6 +118,9 @@ miniproyecto_rick_morty/
 │   │   └── rickMortyApi.js       # Pure ES module HTTP client (Character, Location, Episode APIs)
 │   ├── storage/
 │   │   └── favoritesStorage.js   # Decoupled localStorage persistence & bookmark normalizer
+│   ├── ui/
+│   │   ├── renderers.js          # Pure UI template renderers (cards, pagination, empty/error states)
+│   │   └── toast.js              # Standalone notification dispatcher (success, warning, error, info)
 │   └── utils/
 │       └── throttle.js           # Functional rate limiters (throttleLeading, throttle, debounce)
 ├── index.html       # Main character catalog with mobile hamburger, collapsible filters & jQuery CDN
@@ -168,15 +172,17 @@ The application combines and orchestrates the **three official resources** of th
 
 ---
 
-## 🧱 Modular Architecture & Shared ES Modules (WEB-11)
+## 🧱 Modular Architecture & UI Renderers (WEB-11 & WEB-12)
 
-In **WEB-11**, monolithic script responsibilities were extracted into dedicated, reusable **ES6 pure modules** to satisfy the **Single Responsibility Principle (SRP)** and eliminate code duplication (DRY):
+In **WEB-11 & WEB-12**, monolithic script responsibilities were extracted into dedicated, reusable **ES6 pure modules** to satisfy the **Single Responsibility Principle (SRP)** and eliminate code duplication (DRY):
 
 | Module | Location | Primary Responsibilities | Zero-DOM Contract |
 |---|---|---|:---:|
 | **Storage Service** | `js/storage/favoritesStorage.js` | • Centralizes `localStorage` reading/writing under `rick_morty_favoritos`.<br>• Normalizes character attributes across schemas (`nombre`/`name`, `estado`/`status`, etc.).<br>• Exposes `getFavorites()`, `saveFavorites()`, `toggleFavorite()`, `isFavorite()`, `getFavoriteIds()`, `clearFavorites()`. | ✅ Yes |
 | **API Client** | `js/api/rickMortyApi.js` | • Encapsulates HTTP networking via native `fetch`.<br>• Standardizes query parameter construction via `URLSearchParams`.<br>• Uniform error handling and 404 normalization for empty filter results.<br>• Normalizes single vs batch episode responses into consistent Arrays.<br>• Exposes `getCharacters()`, `getCharacterById()`, `getLocation()`, `getEpisodes()`. | ✅ Yes |
 | **Functional Utils** | `js/utils/throttle.js` | • `throttleLeading(func, cooldownMs)`: Leading-edge throttle for interactive UI buttons.<br>• `throttle(func, limitMs)`: Interval throttle for high-frequency viewport & scroll events.<br>• `debounce(func, delayMs)`: Inactivity delay limiter with `.cancel()` capability. | ✅ Yes |
+| **UI Renderers** | `js/ui/renderers.js` | • `createCharacterCardHtml(character, isFavorite)`: Pure sanitized markup generation for catalog cards.<br>• `createCharacterCardElement(character, isFav, handlers)`: DOM card element factory.<br>• `renderPaginationControls(page, total, count)`: Calculates boundary states & button disabled flags.<br>• `renderEmptyState(msg, opts)` & `renderErrorState(msg, backLink)`: Standardized feedback builders.<br>• `renderEpisodeItemHtml(ep)` & `renderCharacterProfile(...)`: Technical specs & chained pipeline presentation. | ✅ Pure Data In / Pure Markup Out |
+| **Toast Notifications** | `js/ui/toast.js` | • Standalone, reusable floating notification dispatcher.<br>• Supports multiple severity levels: `success`/`exito`, `warning`/`advertencia`, `eliminar`, `error`, `info`.<br>• Self-mounts dynamically to `#toast-contenedor` or creates it on demand.<br>• Handles entry and exit fade animations automatically. | ✅ Decoupled Dispatcher |
 
 ---
 
