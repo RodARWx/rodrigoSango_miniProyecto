@@ -151,6 +151,7 @@ miniproyecto_plan_b/ (Branch: feature/WEB-6-translate-documentation-comments-to-
     ├── app.js                                # Modular catalog controller (ES Module - WEB-13)
     ├── detalle.js                            # Modular pipeline orchestrator (ES Module - WEB-14)
     ├── responsive.js                         # jQuery responsive controller with English comments
+    ├── test-regression.mjs                   # Automated E2E regression verification test runner (WEB-15)
     └── .gitignore                            # Subproject git ignore rules
 ```
 

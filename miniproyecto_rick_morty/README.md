@@ -11,6 +11,7 @@
 [![UI Renderers & Toast](https://img.shields.io/badge/Jira_Task-WEB--12:_UI_Renderers_%26_Toast-0052CC?style=for-the-badge)](https://sistemas-uce.atlassian.net/browse/WEB-12)
 [![Catalog Controller](https://img.shields.io/badge/Jira_Task-WEB--13:_Catalog_Controller-0052CC?style=for-the-badge)](https://sistemas-uce.atlassian.net/browse/WEB-13)
 [![Detail Pipeline Orchestrator](https://img.shields.io/badge/Jira_Task-WEB--14:_Detail_Pipeline_Orchestrator-0052CC?style=for-the-badge)](https://sistemas-uce.atlassian.net/browse/WEB-14)
+[![Regression Testing & Docs](https://img.shields.io/badge/Jira_Task-WEB--15:_Regression_Testing_%26_Docs-success?style=for-the-badge)](https://sistemas-uce.atlassian.net/browse/WEB-15)
 
 ---
 
@@ -131,6 +132,7 @@ miniproyecto_rick_morty/
 ├── app.js           # Modular catalog controller (ES Module - WEB-13, SRP state & event orchestrator)
 ├── detalle.js       # Modular pipeline orchestrator (ES Module - WEB-14, chained multi-service join)
 ├── responsive.js    # jQuery responsive controller (hamburger, filter toggle, scroll-to-top)
+├── test-regression.mjs # Automated E2E regression verification test runner (WEB-15)
 ├── .gitignore       # Git ignore rules for system artifacts
 └── README.md        # Technical project documentation (English)
 ```
@@ -174,9 +176,58 @@ The application combines and orchestrates the **three official resources** of th
 
 ---
 
-## 🧱 Modular Architecture & Controllers (WEB-11, WEB-12, WEB-13 & WEB-14)
+## 🧱 Modular ES6 Architecture & System Design (Sprint 2: WEB-11 to WEB-15)
 
-In **WEB-11, WEB-12, WEB-13 & WEB-14**, monolithic script responsibilities were extracted into dedicated, reusable **ES6 pure modules** and lightweight controllers to satisfy the **Single Responsibility Principle (SRP)** and eliminate code duplication (DRY):
+In **Sprint 2 (WEB-11 through WEB-15)**, the client-side architecture was completely refactored from legacy monolithic scripts into decoupled, reusable **pure ES6 modules** and lightweight controllers adhering to the **Single Responsibility Principle (SRP)**, **DRY (Don't Repeat Yourself)**, and clean layered architecture:
+
+```mermaid
+graph TD
+    subgraph UI_Views ["Presentation Views (HTML)"]
+        IndexView["index.html (Catalog View)"]
+        DetailView["detalle.html (Chained Join View)"]
+    end
+
+    subgraph Controllers ["Orchestration Layer"]
+        AppController["app.js (Catalog Controller)"]
+        DetailController["detalle.js (Pipeline Orchestrator)"]
+    end
+
+    subgraph UI_Modules ["UI & Feedback Layer (Zero-Business Logic)"]
+        Renderers["js/ui/renderers.js<br>(Cards, Pagination, Specs)"]
+        Toast["js/ui/toast.js<br>(Floating Notifications)"]
+    end
+
+    subgraph Shared_Services ["Shared Domain & Services"]
+        ApiClient["js/api/rickMortyApi.js<br>(HTTP Fetch Client)"]
+        Storage["js/storage/favoritesStorage.js<br>(Bookmarks & Normalizer)"]
+        Throttle["js/utils/throttle.js<br>(Rate Limiters)"]
+    end
+
+    subgraph External_Resources ["External Resources & Infrastructure"]
+        PublicApi["The Rick & Morty REST API<br>(Character, Location, Episode)"]
+        LocalStorage["Browser Web Storage API<br>(localStorage)"]
+    end
+
+    IndexView --> AppController
+    DetailView --> DetailController
+
+    AppController --> Renderers
+    AppController --> Toast
+    AppController --> ApiClient
+    AppController --> Storage
+    AppController --> Throttle
+
+    DetailController --> Renderers
+    DetailController --> Toast
+    DetailController --> ApiClient
+    DetailController --> Storage
+    DetailController --> Throttle
+
+    ApiClient --> PublicApi
+    Storage --> LocalStorage
+```
+
+### Module Responsibilities & Contracts
 
 | Module / Controller | Location | Primary Responsibilities | Zero-DOM Contract |
 |---|---|---|:---:|
@@ -187,6 +238,24 @@ In **WEB-11, WEB-12, WEB-13 & WEB-14**, monolithic script responsibilities were 
 | **Toast Notifications** | `js/ui/toast.js` | • Standalone, reusable floating notification dispatcher.<br>• Supports multiple severity levels: `success`/`exito`, `warning`/`advertencia`, `eliminar`, `error`, `info`.<br>• Self-mounts dynamically to `#toast-contenedor` or creates it on demand.<br>• Handles entry and exit fade animations automatically. | ✅ Decoupled Dispatcher |
 | **Catalog Controller** | `app.js` | • Coordinates catalog view lifecycle, tab navigation, and pagination boundaries.<br>• Enforces 4.0s pedagogical debounced search with spinner and instant <kbd>Enter</kbd> trigger.<br>• Zero embedded `fetch` or direct `localStorage` access (delegates to ES modules). | 🔄 View Controller (SRP) |
 | **Detail Orchestrator** | `detalle.js` | • Coordinates the 3-step chained join pipeline (Character ➔ Location ➔ Episodes).<br>• Synchronizes pipeline progress indicators (`#paso-personaje`, `#paso-ubicacion`, `#paso-episodios`).<br>• Zero duplicated persistence, toast, or rate-limiting code (fully leverages shared modules). | 🔄 Pipeline Orchestrator (SRP) |
+
+### 🧪 Automated Regression Verification (WEB-15)
+
+Sprint 2 deliverables include an automated end-to-end verification suite in [`test-regression.mjs`](file:///c:/Users/braya/Documents/Septimo/Programci%C3%B3n%20Web/miniproyecto_plan_b/miniproyecto_rick_morty/test-regression.mjs) testing the integration of all five modules and controllers:
+
+```bash
+# Execute automated regression test suite
+cd miniproyecto_rick_morty
+node test-regression.mjs
+```
+
+**Verification Results:**
+- **Suite 1 (Functional Utilities)**: 5/5 passed (leading-edge throttle, burst suppression, debounce delay & cancellation).
+- **Suite 2 (Storage Service)**: 9/9 passed (normalization, bookmark toggle, O(1) Set lookup, duplicate protection).
+- **Suite 3 (API Client)**: 8/8 passed (URL ID parsing, live multi-filter query, 404 normalization, chained batch join).
+- **Suite 4 (UI Renderers)**: 15/15 passed (status mapping, gender localization, pagination boundaries, empty/error builders, technical profile mapper).
+- **Suite 5 (Toast Notifications)**: 4/4 passed (dispatcher creation, severity classes, auto-dismiss lifecycle).
+- **Total**: **41/41 tests passing with 0 regressions**.
 
 ---
 
