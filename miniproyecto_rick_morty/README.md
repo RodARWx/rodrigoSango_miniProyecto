@@ -9,6 +9,7 @@
 [![Chained API Join](https://img.shields.io/badge/Jira_Task-WEB--9:_Chained_API_Join-blueviolet?style=for-the-badge)](https://sistemas-uce.atlassian.net/browse/WEB-9)
 [![Modular Architecture](https://img.shields.io/badge/Jira_Task-WEB--11:_Modular_Architecture-0052CC?style=for-the-badge)](https://sistemas-uce.atlassian.net/browse/WEB-11)
 [![UI Renderers & Toast](https://img.shields.io/badge/Jira_Task-WEB--12:_UI_Renderers_%26_Toast-0052CC?style=for-the-badge)](https://sistemas-uce.atlassian.net/browse/WEB-12)
+[![Catalog Controller](https://img.shields.io/badge/Jira_Task-WEB--13:_Catalog_Controller-0052CC?style=for-the-badge)](https://sistemas-uce.atlassian.net/browse/WEB-13)
 
 ---
 
@@ -126,7 +127,7 @@ miniproyecto_rick_morty/
 ├── index.html       # Main character catalog with mobile hamburger, collapsible filters & jQuery CDN
 ├── detalle.html     # Character profile view with mobile responsive header & jQuery CDN
 ├── style.css        # Responsive stylesheet (dark sci-fi theme, hamburger icon, media queries)
-├── app.js           # Core client logic (API queries, 4.0s delay search, localStorage favorites)
+├── app.js           # Modular catalog controller (ES Module - WEB-13, SRP state & event orchestrator)
 ├── detalle.js       # Profile logic (Endpoints 2 & 3 consumption, episode parsing, favorite toggle)
 ├── responsive.js    # jQuery responsive controller (hamburger, filter toggle, scroll-to-top)
 ├── .gitignore       # Git ignore rules for system artifacts
@@ -172,17 +173,18 @@ The application combines and orchestrates the **three official resources** of th
 
 ---
 
-## 🧱 Modular Architecture & UI Renderers (WEB-11 & WEB-12)
+## 🧱 Modular Architecture & Controllers (WEB-11, WEB-12 & WEB-13)
 
-In **WEB-11 & WEB-12**, monolithic script responsibilities were extracted into dedicated, reusable **ES6 pure modules** to satisfy the **Single Responsibility Principle (SRP)** and eliminate code duplication (DRY):
+In **WEB-11, WEB-12 & WEB-13**, monolithic script responsibilities were extracted into dedicated, reusable **ES6 pure modules** and lightweight controllers to satisfy the **Single Responsibility Principle (SRP)** and eliminate code duplication (DRY):
 
-| Module | Location | Primary Responsibilities | Zero-DOM Contract |
+| Module / Controller | Location | Primary Responsibilities | Zero-DOM Contract |
 |---|---|---|:---:|
 | **Storage Service** | `js/storage/favoritesStorage.js` | • Centralizes `localStorage` reading/writing under `rick_morty_favoritos`.<br>• Normalizes character attributes across schemas (`nombre`/`name`, `estado`/`status`, etc.).<br>• Exposes `getFavorites()`, `saveFavorites()`, `toggleFavorite()`, `isFavorite()`, `getFavoriteIds()`, `clearFavorites()`. | ✅ Yes |
 | **API Client** | `js/api/rickMortyApi.js` | • Encapsulates HTTP networking via native `fetch`.<br>• Standardizes query parameter construction via `URLSearchParams`.<br>• Uniform error handling and 404 normalization for empty filter results.<br>• Normalizes single vs batch episode responses into consistent Arrays.<br>• Exposes `getCharacters()`, `getCharacterById()`, `getLocation()`, `getEpisodes()`. | ✅ Yes |
 | **Functional Utils** | `js/utils/throttle.js` | • `throttleLeading(func, cooldownMs)`: Leading-edge throttle for interactive UI buttons.<br>• `throttle(func, limitMs)`: Interval throttle for high-frequency viewport & scroll events.<br>• `debounce(func, delayMs)`: Inactivity delay limiter with `.cancel()` capability. | ✅ Yes |
 | **UI Renderers** | `js/ui/renderers.js` | • `createCharacterCardHtml(character, isFavorite)`: Pure sanitized markup generation for catalog cards.<br>• `createCharacterCardElement(character, isFav, handlers)`: DOM card element factory.<br>• `renderPaginationControls(page, total, count)`: Calculates boundary states & button disabled flags.<br>• `renderEmptyState(msg, opts)` & `renderErrorState(msg, backLink)`: Standardized feedback builders.<br>• `renderEpisodeItemHtml(ep)` & `renderCharacterProfile(...)`: Technical specs & chained pipeline presentation. | ✅ Pure Data In / Pure Markup Out |
 | **Toast Notifications** | `js/ui/toast.js` | • Standalone, reusable floating notification dispatcher.<br>• Supports multiple severity levels: `success`/`exito`, `warning`/`advertencia`, `eliminar`, `error`, `info`.<br>• Self-mounts dynamically to `#toast-contenedor` or creates it on demand.<br>• Handles entry and exit fade animations automatically. | ✅ Decoupled Dispatcher |
+| **Catalog Controller** | `app.js` | • Coordinates catalog view lifecycle, tab navigation, and pagination boundaries.<br>• Enforces 4.0s pedagogical debounced search with spinner and instant <kbd>Enter</kbd> trigger.<br>• Zero embedded `fetch` or direct `localStorage` access (delegates to ES modules). | 🔄 View Controller (SRP) |
 
 ---
 

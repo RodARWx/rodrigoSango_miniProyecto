@@ -148,7 +148,7 @@ miniproyecto_plan_b/ (Branch: feature/WEB-6-translate-documentation-comments-to-
     ├── index.html                            # Character catalog with cyber hamburger & jQuery CDN
     ├── detalle.html                          # Single character detail view with responsive header & jQuery CDN
     ├── style.css                             # Cyber-themed responsive stylesheet
-    ├── app.js                                # Client logic with English comments
+    ├── app.js                                # Modular catalog controller (ES Module - WEB-13)
     ├── detalle.js                            # Detail logic with English comments
     ├── responsive.js                         # jQuery responsive controller with English comments
     └── .gitignore                            # Subproject git ignore rules
