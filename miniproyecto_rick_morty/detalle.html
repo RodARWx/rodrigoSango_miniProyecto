@@ -47,80 +47,132 @@
         <!-- Full Detail View Container -->
         <div id="contenedor-detalle" class="vista-detalle">
             
+            <!-- Chained API Join Pipeline Visual Indicator (WEB-9) -->
+            <div id="pipeline-cadena" class="pipeline-cadena">
+                <span id="paso-personaje" class="pipeline-paso activo">
+                    <span class="paso-num">1</span> Character Service (/character/:id)
+                </span>
+                <span class="pipeline-flecha">➔</span>
+                <span id="paso-ubicacion" class="pipeline-paso">
+                    <span class="paso-num">2</span> Location Service (/location/:id)
+                </span>
+                <span class="pipeline-flecha">➔</span>
+                <span id="paso-episodios" class="pipeline-paso">
+                    <span class="paso-num">3</span> Episode Service (/episode/:ids)
+                </span>
+            </div>
+
             <!-- Animated Loading Spinner -->
             <div id="cargando-detalle" class="estado-mensaje">
                 <div class="spinner"></div>
-                <p>Consultando Endpoint 2 y Endpoint 3 de la API...</p>
+                <p>Executing chained join across the three Rick & Morty API services...</p>
             </div>
 
-            <!-- Technical Specifications Profile (Injected with detalle.js) -->
+            <!-- Technical Specifications Profile (Service 1: /api/character/{id}) -->
             <div id="ficha-tecnica" class="ficha-tecnica" style="display: none;">
                 
                 <!-- Left Column: Portrait, Status, and Favorites Action -->
                 <div class="ficha-foto-columna">
                     <div class="ficha-foto-envoltura">
-                        <img id="personaje-foto" src="" alt="Retrato del personaje">
-                        <div id="personaje-estado-badge" class="estado-flotante">Estado</div>
+                        <img id="personaje-foto" src="" alt="Portrait of character">
+                        <div id="personaje-estado-badge" class="estado-flotante">Status</div>
                     </div>
 
                     <!-- Favorite Toggle Button (localStorage) -->
                     <div class="ficha-accion-favorito">
                         <button type="button" id="btn-toggle-favorito" class="btn btn-favorito-detalle">
                             <span id="icono-favorito-detalle">⭐</span>
-                            <span id="texto-favorito-detalle">Guardar en Favoritos</span>
+                            <span id="texto-favorito-detalle">Save to Favorites</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- Right Column: Technical Specifications (Endpoint 2: /api/character/{id}) -->
+                <!-- Right Column: Technical Specifications (Service 1: /api/character/{id}) -->
                 <div class="ficha-info-columna">
                     <div class="ficha-titulo-envoltura">
-                        <h2 id="personaje-nombre-h2">Nombre</h2>
-                        <span class="badge-endpoint">Endpoint 2: /api/character/:id</span>
+                        <h2 id="personaje-nombre-h2">Name</h2>
+                        <span class="badge-endpoint">Service 1: /api/character/:id</span>
                     </div>
                     
                     <div class="datos-grilla">
                         <div class="dato-item">
-                            <span class="dato-etiqueta">Especie:</span>
+                            <span class="dato-etiqueta">Species:</span>
                             <span id="personaje-especie" class="dato-valor">-</span>
                         </div>
 
                         <div class="dato-item">
-                            <span class="dato-etiqueta">Género:</span>
+                            <span class="dato-etiqueta">Gender:</span>
                             <span id="personaje-genero" class="dato-valor">-</span>
                         </div>
 
                         <div class="dato-item">
-                            <span class="dato-etiqueta">Tipo / Sub-especie:</span>
-                            <span id="personaje-tipo" class="dato-valor">Ninguno</span>
+                            <span class="dato-etiqueta">Type / Sub-species:</span>
+                            <span id="personaje-tipo" class="dato-valor">None (Standard)</span>
                         </div>
 
                         <div class="dato-item">
-                            <span class="dato-etiqueta">Planeta / Origen:</span>
+                            <span class="dato-etiqueta">Origin Planet:</span>
                             <span id="personaje-origen" class="dato-valor">-</span>
                         </div>
 
                         <div class="dato-item">
-                            <span class="dato-etiqueta">Ubicación actual:</span>
+                            <span class="dato-etiqueta">Current Location:</span>
                             <span id="personaje-ubicacion" class="dato-valor">-</span>
                         </div>
 
                         <div class="dato-item">
-                            <span class="dato-etiqueta">Total de apariciones:</span>
+                            <span class="dato-etiqueta">Total Appearances:</span>
                             <span id="personaje-total-episodios" class="dato-valor">-</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Episodes Section (Endpoint 3: /api/episode/{ids}) -->
+            <!-- Location Details Section (Service 2: /api/location/{id} - Chained Join) -->
+            <section id="seccion-ubicacion" class="seccion-ubicacion" style="display: none;">
+                <div class="ubicacion-cabecera">
+                    <div>
+                        <h3 id="loc-titulo-cabecera">Planet & Location Details</h3>
+                        <span class="badge-endpoint">Service 2: /api/location/:id (Chained Join)</span>
+                    </div>
+                    <span id="badge-ubicacion-tipo" class="badge-contador">Loading location...</span>
+                </div>
+
+                <div id="loc-contenido-grilla" class="datos-grilla">
+                    <div class="dato-item">
+                        <span class="dato-etiqueta">Location Name:</span>
+                        <span id="loc-nombre" class="dato-valor">-</span>
+                    </div>
+
+                    <div class="dato-item">
+                        <span class="dato-etiqueta">Location Type:</span>
+                        <span id="loc-tipo" class="dato-valor">-</span>
+                    </div>
+
+                    <div class="dato-item">
+                        <span class="dato-etiqueta">Dimension:</span>
+                        <span id="loc-dimension" class="dato-valor">-</span>
+                    </div>
+
+                    <div class="dato-item">
+                        <span class="dato-etiqueta">Known Residents:</span>
+                        <span id="loc-residentes" class="dato-valor">-</span>
+                    </div>
+                </div>
+
+                <div id="loc-mensaje-vacio" style="display: none; padding: 1.5rem; text-align: center; color: var(--color-texto-mutado);">
+                    <p>This character's location coordinates are unmapped or unknown in the Multiverse database.</p>
+                </div>
+            </section>
+
+            <!-- Episodes Section (Service 3: /api/episode/{ids} - Chained Join) -->
             <section id="seccion-episodios" class="seccion-episodios" style="display: none;">
                 <div class="episodios-cabecera">
                     <div>
-                        <h3>Episodios en los que participa</h3>
-                        <span class="badge-endpoint">Endpoint 3: /api/episode/:ids</span>
+                        <h3>Episodes & Multiverse Appearances</h3>
+                        <span class="badge-endpoint">Service 3: /api/episode/:ids (Chained Join)</span>
                     </div>
-                    <span id="contador-episodios" class="badge-contador">Cargando episodios...</span>
+                    <span id="contador-episodios" class="badge-contador">Loading episodes...</span>
                 </div>
 
                 <div id="lista-episodios" class="grilla-episodios">

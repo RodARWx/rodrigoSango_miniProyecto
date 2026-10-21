@@ -277,10 +277,19 @@ spring.jpa.hibernate.ddl-auto=update
 - `PUT /api/estudiantes/{id}`: Update existing student data.
 - `DELETE /api/estudiantes/{id}`: Delete student by ID.
 
-### 2. Rick & Morty API (Official External Endpoints Consumed)
-1. `GET https://rickandmortyapi.com/api/character/?name=...&status=...&gender=...&page=...` (Catalog & search)
-2. `GET https://rickandmortyapi.com/api/character/{id}` (Character profile)
-3. `GET https://rickandmortyapi.com/api/episode/{ids}` (Batched episode details)
+### 2. Rick & Morty API (Chained Multi-Service Join - WEB-9)
+The client application chains and orchestrates the **three official resources** of the public API:
+1. `GET https://rickandmortyapi.com/api/character/{id}` (**Character Service**): Queries baseline character traits and relational URLs (`location.url`, `episode[]`).
+2. `GET https://rickandmortyapi.com/api/location/{id}` (**Location Service**): Chained from `character.location.url` to resolve planetary specifications, dimension, and resident count.
+3. `GET https://rickandmortyapi.com/api/episode/{ids}` (**Episode Service**): Chained from `character.episode` to perform a batch query for episode titles, season codes, and air dates.
+*Catalog querying also utilizes `GET /api/character/?name=...` with a strict 4.0s debounce.*
+
+### 3. Rate Limiting & Performance Optimization (Throttle & Debounce)
+Both projects implement standardized rate-limiting utilities to ensure fluid 60fps rendering and prevent duplicate requests:
+- **Debounce**: 4000ms delay with rotating spinner feedback on Rick & Morty search input; 250ms debounce on Student search filtering.
+- **Scroll Throttle**: Floating scroll-to-top button threshold checks throttled to 150ms in both subprojects.
+- **Resize Throttle**: Responsive viewport recalculations throttled to 100ms in both subprojects.
+- **Leading Throttle (Actions & Pagination)**: Catalog pagination buttons throttled to 400–450ms; favorite bookmarks throttled to 350–400ms; Student form submissions (POST/PUT) throttled to 400ms to eliminate duplicate server records.
 
 ---
 

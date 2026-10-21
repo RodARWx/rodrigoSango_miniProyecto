@@ -47,6 +47,29 @@ const conteoTabFav = document.getElementById('conteo-tab-fav');
 const toastContenedor = document.getElementById('toast-contenedor');
 
 // ==========================================================================
+// UTILITY: THROTTLE CONTROLLER (RATE LIMITING FOR USER ACTIONS)
+// ==========================================================================
+/**
+ * Leading-edge throttle utility for UI button interactions.
+ * Fires immediately on the first trigger and ignores subsequent clicks
+ * until the cooldown window has elapsed, preventing API flooding and state glitches.
+ *
+ * @param {Function} func - Callback function to throttle.
+ * @param {number} cooldownMs - Minimum elapsed milliseconds between allowed executions.
+ * @returns {Function} Throttled callback.
+ */
+function throttleLeading(func, cooldownMs = 400) {
+    let lastExecuted = 0;
+    return function (...args) {
+        const now = Date.now();
+        if (now - lastExecuted >= cooldownMs) {
+            lastExecuted = now;
+            return func.apply(this, args);
+        }
+    };
+}
+
+// ==========================================================================
 // 1. LOCAL STORAGE MANAGER (LOCALSTORAGE)
 // ==========================================================================
 
@@ -313,9 +336,9 @@ function renderizarTarjetas(personajes) {
             </div>
         `;
 
-        // Event listener for favorite button (prevents card click navigation)
+        // Event listener for favorite button (throttled to 350ms to prevent double-click glitches)
         const btnFav = tarjeta.querySelector('.btn-favorito-tarjeta');
-        btnFav.addEventListener('click', (e) => {
+        btnFav.addEventListener('click', throttleLeading((e) => {
             e.stopPropagation();
             toggleFavorito({
                 id,
@@ -326,7 +349,7 @@ function renderizarTarjetas(personajes) {
                 imagen,
                 origen
             }, btnFav);
-        });
+        }, 350));
 
         // Navigation click or keyboard Enter listener
         tarjeta.addEventListener('click', () => irADetalle(id));
@@ -469,20 +492,20 @@ btnLimpiarFiltros.addEventListener('click', () => {
     }
 });
 
-// Pagination event listeners
-btnPaginaAnterior.addEventListener('click', () => {
+// Pagination event listeners (throttled to 450ms to prevent spamming the public API)
+btnPaginaAnterior.addEventListener('click', throttleLeading(() => {
     if (paginaActual > 1) {
         consultarPersonajes(paginaActual - 1);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-});
+}, 450));
 
-btnPaginaSiguiente.addEventListener('click', () => {
+btnPaginaSiguiente.addEventListener('click', throttleLeading(() => {
     if (paginaActual < totalPaginas) {
         consultarPersonajes(paginaActual + 1);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-});
+}, 450));
 
 function actualizarControlesPaginacion() {
     badgeContador.textContent = `${totalPersonajes} characters in catalog (API)`;
