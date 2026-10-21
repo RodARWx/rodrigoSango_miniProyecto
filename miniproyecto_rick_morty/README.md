@@ -147,6 +147,16 @@ The application combines and orchestrates the **three official resources** of th
 > [!NOTE]
 > The catalog view also uses `GET /api/character/?name=...&status=...` to list and filter characters with debounced search.
 
+### ⚡ Rate Limiting & Performance Optimization (Throttle & Debounce)
+
+| Mechanism | Target Component | Threshold / Cadence | Technical Purpose |
+|---|---|:---:|---|
+| **Debounce** | `#input-busqueda` | 4000 ms (4.0s) | Waits for typing cessation with an animated spinner before querying the Character API. |
+| **Throttle** | `window.on('scroll')` | 150 ms | Regulates floating scroll-to-top button threshold checks, preserving smooth 60fps scrolling. |
+| **Throttle** | `window.on('resize')` | 100 ms | Regulates mobile/desktop viewport mode adaptation without CPU spiking. |
+| **Leading Throttle** | `btnPaginaAnterior`, `btnPaginaSiguiente` | 450 ms | Prevents API request flooding from rapid clicks on catalog pagination. |
+| **Leading Throttle** | Card & Detail Favorite buttons | 350–400 ms | Prevents double-click race conditions and duplicate writes to `localStorage`. |
+
 ---
 
 ## 📐 Responsive Design Specifications & Breakpoints
