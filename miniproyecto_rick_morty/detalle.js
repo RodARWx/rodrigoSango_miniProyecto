@@ -59,6 +59,28 @@ const listaEpisodios = document.getElementById('lista-episodios');
 const contadorEpisodios = document.getElementById('contador-episodios');
 
 // ==========================================================================
+// UTILITY: THROTTLE CONTROLLER (RATE LIMITING FOR USER ACTIONS)
+// ==========================================================================
+/**
+ * Leading-edge throttle utility for UI button interactions.
+ * Prevents rapid double clicks and spam.
+ *
+ * @param {Function} func - Callback function to throttle.
+ * @param {number} cooldownMs - Cooldown time in milliseconds.
+ * @returns {Function} Throttled callback.
+ */
+function throttleLeading(func, cooldownMs = 400) {
+    let lastExecuted = 0;
+    return function (...args) {
+        const now = Date.now();
+        if (now - lastExecuted >= cooldownMs) {
+            lastExecuted = now;
+            return func.apply(this, args);
+        }
+    };
+}
+
+// ==========================================================================
 // 1. LOCALSTORAGE FAVORITES MANAGER
 // ==========================================================================
 
@@ -134,7 +156,7 @@ function alternarFavorito() {
 }
 
 if (btnToggleFavorito) {
-    btnToggleFavorito.addEventListener('click', alternarFavorito);
+    btnToggleFavorito.addEventListener('click', throttleLeading(alternarFavorito, 400));
 }
 
 // ==========================================================================

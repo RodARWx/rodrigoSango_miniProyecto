@@ -153,16 +153,53 @@ $(function () {
     }
 
     // ==========================================================================
+    // UTILITY: THROTTLE CONTROLLER (RATE LIMITING FOR HIGH-FREQUENCY EVENTS)
+    // ==========================================================================
+    /**
+     * Ensures a callback function executes at most once every `limit` milliseconds,
+     * maintaining high 60fps rendering performance while preventing CPU lag.
+     *
+     * @param {Function} func - Function to throttle.
+     * @param {number} limit - Minimum interval in milliseconds between executions.
+     * @returns {Function} Throttled function.
+     */
+    function throttle(func, limit = 150) {
+        let inThrottle = false;
+        let lastArgs = null;
+        let lastContext = null;
+
+        return function (...args) {
+            if (!inThrottle) {
+                func.apply(this, args);
+                inThrottle = true;
+                setTimeout(() => {
+                    inThrottle = false;
+                    if (lastArgs) {
+                        func.apply(lastContext, lastArgs);
+                        lastArgs = null;
+                        lastContext = null;
+                    }
+                }, limit);
+            } else {
+                lastArgs = args;
+                lastContext = this;
+            }
+        };
+    }
+
+    // ==========================================================================
     // 3. FLOATING SCROLL-TO-TOP BUTTON (jQuery fadeIn / fadeOut & animate)
     // ==========================================================================
-    $window.on('scroll', function () {
-        // Show button on scroll threshold (> 280px)
+    // Throttled scroll listener (evaluates every 150ms instead of 100+ times/sec)
+    const handleScrollThrottled = throttle(function () {
         if ($window.scrollTop() > 280) {
             $btnScrollTop.stop(true, true).fadeIn(250);
         } else {
             $btnScrollTop.stop(true, true).fadeOut(250);
         }
-    });
+    }, 150);
+
+    $window.on('scroll', handleScrollThrottled);
 
     $btnScrollTop.on('click', function () {
         // Smooth animated scroll to top using jQuery animate
@@ -172,15 +209,11 @@ $(function () {
     });
 
     // ==========================================================================
-    // 4. LOAD & RESIZE EVENT LISTENERS
+    // 4. LOAD & RESIZE EVENT LISTENERS (THROTTLED VIEWPORT ADAPTIVITY)
     // ==========================================================================
     // Initial run on document ready
     adaptResolution();
 
-    // Debounced resize event listener
-    let resizeTimer = null;
-    $window.on('resize', function () {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(adaptResolution, 60);
-    });
+    // Throttled resize event listener (smooth 100ms viewport cadence)
+    $window.on('resize', throttle(adaptResolution, 100));
 });

@@ -54,6 +54,29 @@ const btnCancelarEdicion = document.getElementById('btn-cancelar-edicion');
 const formularioEdicion = document.getElementById('formulario-edicion');
 
 // ==========================================================================
+// UTILITY: THROTTLE CONTROLLER (RATE LIMITING FOR USER ACTIONS)
+// ==========================================================================
+/**
+ * Leading-edge throttle utility for UI button interactions and form submissions.
+ * Fires immediately on the first trigger and ignores subsequent events
+ * until the cooldown window has elapsed, preventing duplicate requests and server overload.
+ *
+ * @param {Function} func - Callback function to throttle.
+ * @param {number} cooldownMs - Minimum elapsed milliseconds between allowed executions.
+ * @returns {Function} Throttled callback.
+ */
+function throttleLeading(func, cooldownMs = 400) {
+    let lastExecuted = 0;
+    return function (...args) {
+        const now = Date.now();
+        if (now - lastExecuted >= cooldownMs) {
+            lastExecuted = now;
+            return func.apply(this, args);
+        }
+    };
+}
+
+// ==========================================================================
 // 1. COURSE LOADING & DATA PRELOADING
 // ==========================================================================
 async function cargarCursos() {
@@ -406,17 +429,18 @@ tamanoPaginaSelect.addEventListener('change', (e) => {
     obtenerEstudiantes(0);
 });
 
-btnPaginaAnterior.addEventListener('click', () => {
+// Pagination event listeners (throttled to 400ms to prevent spamming backend page queries)
+btnPaginaAnterior.addEventListener('click', throttleLeading(() => {
     if (paginaActual > 0) {
         obtenerEstudiantes(paginaActual - 1);
     }
-});
+}, 400));
 
-btnPaginaSiguiente.addEventListener('click', () => {
+btnPaginaSiguiente.addEventListener('click', throttleLeading(() => {
     if (paginaActual < totalPaginas - 1) {
         obtenerEstudiantes(paginaActual + 1);
     }
-});
+}, 400));
 
 // ==========================================================================
 // 6. INTERACTIVE PRESET AVATARS SELECTOR
@@ -683,7 +707,7 @@ function validarFormularioCompleto(prefijo = '') {
 // ==========================================================================
 // 8. STUDENT REGISTRATION (POST) WITH VALIDATION & VISUAL FEEDBACK
 // ==========================================================================
-formularioRegistro.addEventListener('submit', async (e) => {
+formularioRegistro.addEventListener('submit', throttleLeading(async (e) => {
     e.preventDefault();
 
     if (!validarFormularioCompleto('')) {
@@ -790,7 +814,7 @@ btnCerrarModal.addEventListener('click', cerrarModalEdicion);
 btnCancelarEdicion.addEventListener('click', cerrarModalEdicion);
 modalBackdrop.addEventListener('click', cerrarModalEdicion);
 
-formularioEdicion.addEventListener('submit', async (e) => {
+formularioEdicion.addEventListener('submit', throttleLeading(async (e) => {
     e.preventDefault();
 
     if (!validarFormularioCompleto('edit')) {
