@@ -829,6 +829,111 @@ body {
     color: white;
 }
 
+/* ==========================================================================
+   CHAINED API PIPELINE INDICATOR (WEB-9)
+   ========================================================================== */
+.pipeline-cadena {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0.9rem 1.4rem;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.7) 100%);
+    border: 1px solid rgba(6, 182, 212, 0.35);
+    border-radius: var(--radio-borde);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    margin-bottom: 0.5rem;
+}
+
+.pipeline-paso {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #94a3b8;
+    background-color: rgba(15, 23, 42, 0.8);
+    padding: 0.4rem 0.85rem;
+    border-radius: 8px;
+    border: 1px solid var(--color-borde);
+    transition: all 0.25s ease;
+}
+
+.pipeline-paso.activo {
+    border-color: var(--color-primario);
+    color: #ffffff;
+    background-color: rgba(6, 182, 212, 0.12);
+    box-shadow: 0 0 12px rgba(6, 182, 212, 0.25);
+}
+
+.pipeline-paso .paso-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: var(--color-primario);
+    color: #042f2e;
+    font-size: 0.72rem;
+    font-style: normal;
+    font-weight: 800;
+}
+
+.pipeline-flecha {
+    color: var(--color-primario);
+    font-weight: 800;
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+/* ==========================================================================
+   LOCATION SECTION (SERVICE 2: /api/location/:id - CHAINED JOIN)
+   ========================================================================== */
+.seccion-ubicacion {
+    background-color: var(--color-fondo-alt);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-borde);
+    padding: 1.8rem;
+    box-shadow: var(--sombra-tarjeta);
+    transition: border-color 0.25s ease;
+}
+
+.seccion-ubicacion:hover {
+    border-color: rgba(6, 182, 212, 0.35);
+}
+
+.ubicacion-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 1rem;
+}
+
+.ubicacion-cabecera h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.2rem;
+}
+
+.badge-endpoint {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-primario);
+    background-color: rgba(6, 182, 212, 0.12);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    display: inline-block;
+}
+
 /* Episodes Section (Endpoint 3) */
 .seccion-episodios {
     background-color: var(--color-fondo-alt);

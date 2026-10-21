@@ -6,12 +6,13 @@
 [![CSS3 Responsive](https://img.shields.io/badge/CSS3-Mobile_Responsive-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/)
 [![Storage: localStorage](https://img.shields.io/badge/Storage-localStorage-4CAF50?style=for-the-badge&logo=googlechrome&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
 [![Documentation: English](https://img.shields.io/badge/Docs_%26_Comments-English_(WEB--6)-success?style=for-the-badge)](https://sistemas-uce.atlassian.net/browse/WEB-6)
+[![Chained API Join](https://img.shields.io/badge/Jira_Task-WEB--9:_Chained_API_Join-blueviolet?style=for-the-badge)](https://sistemas-uce.atlassian.net/browse/WEB-9)
 
 ---
 
 ## 📋 Table of Contents
 1. [Project Overview & Context](#-project-overview--context)
-2. [Feature Spotlight: English Documentation & jQuery Responsiveness](#-feature-spotlight-english-documentation--jquery-responsiveness)
+2. [Feature Spotlight: English Documentation, Responsiveness & Chained API Join](#-feature-spotlight-english-documentation-responsiveness--chained-api-join)
 3. [Objectives](#-objectives)
    - [General Objective](#general-objective)
    - [Specific Objectives](#specific-objectives)
@@ -20,7 +21,7 @@
    - [Boundaries & Constraints](#boundaries--constraints)
 5. [Project Directory Structure](#-project-directory-structure)
 6. [Technology Stack](#-technology-stack)
-7. [The 3 Official Endpoints Consumed](#-the-3-official-endpoints-consumed)
+7. [Chained Multi-Service API Specifications (WEB-9)](#-chained-multi-service-api-specifications-web-9)
 8. [Responsive Design Specifications & Breakpoints](#-responsive-design-specifications--breakpoints)
 9. [Client-Side Persistence (`localStorage`)](#-client-side-persistence-localstorage)
 10. [Prerequisites](#-prerequisites)
@@ -42,18 +43,22 @@ The application allows users to explore characters and episodes from the *Rick a
 
 ---
 
-## 🌟 Feature Spotlight: English Documentation & jQuery Responsiveness
+## 🌟 Feature Spotlight: English Documentation, Responsiveness & Chained API Join
 
 ### 1. Monorepo-Wide English Translation (WEB-6)
-As part of Jira task **WEB-6**, all technical documentation, code comments, inline docstrings, and UI messaging across the subproject have been standardized into professional English:
-- **Client Scripts**: Every function and event handler in [`app.js`](file:///c:/Users/braya/Documents/Septimo/Programción%20Web/miniproyecto_plan_b/miniproyecto_rick_morty/app.js), [`detalle.js`](file:///c:/Users/braya/Documents/Septimo/Programción%20Web/miniproyecto_plan_b/miniproyecto_rick_morty/detalle.js), and [`responsive.js`](file:///c:/Users/braya/Documents/Septimo/Programción%20Web/miniproyecto_plan_b/miniproyecto_rick_morty/responsive.js) is thoroughly documented with English JSDoc annotations.
-- **UI & Accessibility Labels**: `aria-label`, placeholder attributes, empty-state text, and status toasts provide clear English feedback.
+All technical documentation, code comments, inline docstrings, and UI messaging across the subproject have been standardized into professional English.
 
 ### 2. Cyber-Themed Mobile Responsiveness (WEB-8)
-- **Mobile Hamburger Navigation (`slideToggle`)**: Smooth 250ms slide menu on viewports `<= 768px`, morphing into an animated glowing "X" icon. Auto-closes on tab selection or clicks outside the navbar.
-- **Collapsible Filter Panel**: Expandable status and gender filters on mobile viewports (`#btn-toggle-filtros`) with dynamic label toggles (`"Show Filters"` ↔ `"Hide Filters"`).
-- **Floating Scroll-To-Top Button**: Monitored scroll threshold (> 280px) triggering smooth animated scrolling to the top (`scrollTop: 0`).
-- **Dynamic Search Placeholder**: Automatically switches between compact placeholder on mobile and detailed search instructions on desktop.
+- **Mobile Hamburger Navigation (`slideToggle`)**: Smooth 250ms slide menu on viewports `<= 768px`.
+- **Collapsible Filter Panel**: Expandable status and gender filters on mobile viewports.
+- **Floating Scroll-To-Top Button**: Smooth animated scrolling to the top (`scrollTop: 0`).
+
+### 3. Chained Multi-Service Join (WEB-9)
+Implements an end-to-end chained pipeline linking the **three core services** of the Rick & Morty API in a join-like operation:
+1. **Character Service (`GET /api/character/{id}`)**: Queries individual character specs and extracts foreign relational references (`location.url` and `episode[]`).
+2. **Location Service (`GET /api/location/{id}`)**: Chained from `character.location.url`, querying detailed planetary data: planet name, classification type, dimension, and known resident count.
+3. **Episode Service (`GET /api/episode/{ids}`)**: Chained from `character.episode`, performing a batch query for episode titles, season codes (`SxxExx`), and original air dates.
+4. **Visual Pipeline Indicator**: A reactive UI header displays the 3-step pipeline state (`Character ➔ Location ➔ Episode`) in real time.
 
 ---
 
@@ -129,15 +134,18 @@ miniproyecto_rick_morty/
 | **Google Fonts (Inter)** | Modern typography |
 | **The Rick & Morty API** | Public official data source ([rickandmortyapi.com](https://rickandmortyapi.com/)) |
 
----
+## 🎯 Chained Multi-Service API Specifications (WEB-9)
 
-## 🎯 The 3 Official Endpoints Consumed
+The application combines and orchestrates the **three official resources** of the Rick & Morty API in a chained relational workflow:
 
-| # | Endpoint URL | HTTP Method | Application Usage |
+| # | Service & Endpoint | HTTP Method | Chained Pipeline Role |
 |---|---|:---:|---|
-| **1** | `https://rickandmortyapi.com/api/character/?name={name}&status={status}&gender={gender}&page={page}` | `GET` | **Catalog & Filtering**: Queries characters with combined name, status, and gender parameters. |
-| **2** | `https://rickandmortyapi.com/api/character/{id}` | `GET` | **Character Profile**: Retrieves individual character specs (origin, species, status, episode list). |
-| **3** | `https://rickandmortyapi.com/api/episode/{ids}` | `GET` | **Episode Details**: Fetches titles, episode codes (`SxxExx`), and air dates for all appearances. |
+| **1** | **Character Service**<br>`https://rickandmortyapi.com/api/character/{id}` | `GET` | **Entry Service**: Baseline character traits, portrait, origin metadata, and relational URLs (`location.url`, `episode[]`). |
+| **2** | **Location Service**<br>`https://rickandmortyapi.com/api/location/{id}` | `GET` | **Chained Join 1**: Resolved from `character.location.url` to extract planet name, classification type, dimension, and resident count. |
+| **3** | **Episode Service**<br>`https://rickandmortyapi.com/api/episode/{ids}` | `GET` | **Chained Join 2**: Resolved from `character.episode` to perform a batch query for episode titles, season codes (`SxxExx`), and air dates. |
+
+> [!NOTE]
+> The catalog view also uses `GET /api/character/?name=...&status=...` to list and filter characters with debounced search.
 
 ---
 
