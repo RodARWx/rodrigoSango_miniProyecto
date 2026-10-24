@@ -753,7 +753,7 @@ formularioRegistro.addEventListener('submit', throttleLeading(async (e) => {
         console.error('Error al registrar estudiante:', error);
         alert('No se pudo conectar con el servidor.');
     }
-});
+}, 400));
 
 // ==========================================================================
 // 9. STUDENT EDITING (PUT) WITH MODAL & VALIDATION
@@ -858,7 +858,7 @@ formularioEdicion.addEventListener('submit', throttleLeading(async (e) => {
         console.error('Error al actualizar estudiante:', error);
         alert('No se pudo conectar con el servidor para actualizar.');
     }
-});
+}, 400));
 
 // ==========================================================================
 // 10. DELETE STUDENT (DELETE)
