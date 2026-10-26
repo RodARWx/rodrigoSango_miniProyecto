@@ -42,7 +42,23 @@ services:
       SPRING_DATASOURCE_PASSWORD: "1709"
       SERVER_PORT: 8080
     ports:
-      - "8080:8080"
+      - "${BACKEND_PORT:-8080}:8080"
+    networks:
+      - app-network
+
+  # ============================================================================
+  # Nginx Web Frontend & Reverse Proxy Service
+  # ============================================================================
+  frontend:
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile
+    container_name: estudiantes-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
     networks:
       - app-network
 

@@ -5,9 +5,7 @@ target/
 .vscode/
 .agents/
 
-# Frontend directories (served separately in WEB-22)
-frontend/
-miniproyecto_rick_morty/
+# Backend target and node caches (if any)
 
 # Documentation and scripts
 *.bat
