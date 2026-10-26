@@ -1,0 +1,61 @@
+services:
+  # ============================================================================
+  # PostgreSQL Relational Database Service
+  # ============================================================================
+  postgres:
+    image: postgres:14-alpine
+    container_name: estudiantes-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: estudiantes_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "1709"
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./seed.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d estudiantes_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - app-network
+
+  # ============================================================================
+  # Spring Boot RESTful API Backend Service
+  # ============================================================================
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: estudiantes-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/estudiantes_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: "1709"
+      SERVER_PORT: 8080
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+
+# ==============================================================================
+# Persistent Named Volumes
+# ==============================================================================
+volumes:
+  postgres_data:
+    driver: local
+
+# ==============================================================================
+# Custom Bridge Network for Inter-Container Communication
+# ==============================================================================
+networks:
+  app-network:
+    driver: bridge

@@ -1,0 +1,15 @@
+# Build outputs and IDE configs
+target/
+.git/
+.gitignore
+.vscode/
+.agents/
+
+# Frontend directories (served separately in WEB-22)
+frontend/
+miniproyecto_rick_morty/
+
+# Documentation and scripts
+*.bat
+*.md
+*.html
