@@ -1,0 +1,14 @@
+{
+  "types": [
+    { "type": "feat", "section": "🚀 Features" },
+    { "type": "fix", "section": "🐛 Bug Fixes" },
+    { "type": "perf", "section": "⚡ Performance Improvements" },
+    { "type": "refactor", "section": "♻️ Code Refactoring" },
+    { "type": "docs", "section": "📚 Documentation" },
+    { "type": "chore", "section": "🔧 Chores & Monorepo Maintenance" },
+    { "type": "docker", "section": "🐳 Containerization & Deployment" }
+  ],
+  "commitUrlFormat": "https://github.com/RodARWx/rodrigoSango_miniProyecto/commit/{{hash}}",
+  "compareUrlFormat": "https://github.com/RodARWx/rodrigoSango_miniProyecto/compare/{{previousTag}}...{{currentTag}}",
+  "issueUrlFormat": "https://sistemas-uce.atlassian.net/browse/{{id}}"
+}
