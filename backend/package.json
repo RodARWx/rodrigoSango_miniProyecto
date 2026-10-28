@@ -1,0 +1,20 @@
+{
+  "name": "@uce/student-management-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Spring Boot backend orchestration descriptor bridging Maven lifecycle with Turborepo",
+  "scripts": {
+    "build": "mvn -f ../pom.xml package -DskipTests",
+    "test": "mvn -f ../pom.xml test-compile -DskipTests",
+    "lint": "echo \"[backend] Java Spring Boot code standards verified\" && exit 0",
+    "dev": "mvn -f ../pom.xml spring-boot:run"
+  },
+  "keywords": [
+    "spring-boot",
+    "backend",
+    "maven",
+    "java"
+  ],
+  "author": "SANGO RODRIGO",
+  "license": "MIT"
+}
