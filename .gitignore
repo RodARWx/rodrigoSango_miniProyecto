@@ -34,3 +34,16 @@ replay_pid*
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# Monorepo, Node & Turborepo dependencies and caches
+node_modules/
+.turbo/
+.npm/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.env
+.env.local
+*.local
+

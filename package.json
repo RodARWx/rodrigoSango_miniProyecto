@@ -1,0 +1,26 @@
+{
+  "name": "uce-web-programming-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monorepo workspace for UCE Web Programming academic projects (Student Management & Rick and Morty)",
+  "workspaces": [
+    "frontend",
+    "miniproyecto_rick_morty"
+  ],
+  "scripts": {
+    "test": "npm run test --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present"
+  },
+  "keywords": [
+    "monorepo",
+    "workspaces",
+    "student-management",
+    "rick-and-morty",
+    "spring-boot",
+    "nginx",
+    "docker"
+  ],
+  "author": "SANGO RODRIGO",
+  "license": "MIT"
+}
