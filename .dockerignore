@@ -6,6 +6,8 @@ target/
 .agents/
 
 # Backend target and node caches (if any)
+node_modules/
+.turbo/
 
 # Documentation and scripts
 *.bat

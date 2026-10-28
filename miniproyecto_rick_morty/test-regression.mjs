@@ -7,10 +7,11 @@
  * ==============================================================================
  */
 
-import { pathToFileURL } from 'url';
-import { resolve } from 'path';
+import { pathToFileURL, fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
 
-const projectRoot = 'c:/Users/braya/Documents/Septimo/Programción Web/miniproyecto_plan_b/miniproyecto_rick_morty';
+const __filename = fileURLToPath(import.meta.url);
+const projectRoot = dirname(__filename);
 
 console.log('═══════════════════════════════════════════════════════════════');
 console.log('🚀 RUNNING COMPREHENSIVE SPRINT 2 REGRESSION TEST SUITE (WEB-15)');

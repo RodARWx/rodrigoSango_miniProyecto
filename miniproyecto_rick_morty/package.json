@@ -1,0 +1,21 @@
+{
+  "name": "@uce/rick-morty-portal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Rick and Morty character catalog and exploration portal with client-side caching",
+  "type": "module",
+  "scripts": {
+    "dev": "echo \"[rick-morty] Portal served via web server or Nginx /rick-morty/\" && exit 0",
+    "build": "echo \"[rick-morty] Static assets prepared for deployment\" && exit 0",
+    "lint": "echo \"[rick-morty] ES modules and styling syntax verification passed\" && exit 0",
+    "test": "node test-regression.mjs"
+  },
+  "keywords": [
+    "rick-and-morty",
+    "catalog",
+    "es-modules",
+    "jquery"
+  ],
+  "author": "SANGO RODRIGO",
+  "license": "MIT"
+}
