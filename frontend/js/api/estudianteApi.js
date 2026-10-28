@@ -13,9 +13,9 @@
  * ==============================================================================
  */
 
-/** Centralized API endpoint with dynamic origin detection for reverse proxy support */
+/** Centralized API endpoint with dynamic origin detection for API Gateway versioned routing (/api/v1/) */
 export const API_BASE_URL = (typeof window !== 'undefined' && window.location.origin && !window.location.origin.startsWith('file:') && !window.location.origin.includes(':5500'))
-    ? `${window.location.origin}/api/estudiantes`
+    ? `${window.location.origin}/api/v1/estudiantes`
     : 'http://localhost:8080/api/estudiantes';
 
 /**
