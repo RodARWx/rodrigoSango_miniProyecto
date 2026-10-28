@@ -243,4 +243,35 @@ public class EstudianteController {
         estudianteRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    /**
+     * GET /api/estudiantes/health
+     * Health probe endpoint for Application Load Balancers and container orchestrators.
+     * Validates database connectivity and exposes instance metadata for load distribution verification.
+     */
+    @GetMapping("/health")
+    public ResponseEntity<Map<String, Object>> healthCheck() {
+        Map<String, Object> health = new LinkedHashMap<>();
+        health.put("status", "UP");
+        health.put("timestamp", java.time.Instant.now().toString());
+        health.put("service", "estudiantes-api");
+
+        try {
+            long totalStudents = estudianteRepository.count();
+            health.put("database", "CONNECTED");
+            health.put("totalRecords", totalStudents);
+        } catch (Exception e) {
+            health.put("database", "DOWN");
+            health.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(health);
+        }
+
+        try {
+            health.put("instanceHost", java.net.InetAddress.getLocalHost().getHostName());
+        } catch (Exception ignored) {
+            health.put("instanceHost", "unknown");
+        }
+
+        return ResponseEntity.ok(health);
+    }
 }
