@@ -2,15 +2,17 @@
   "name": "uce-web-programming-monorepo",
   "version": "1.0.0",
   "private": true,
+  "packageManager": "npm@11.19.0",
   "description": "Monorepo workspace for UCE Web Programming academic projects (Student Management & Rick and Morty)",
   "workspaces": [
     "frontend",
     "miniproyecto_rick_morty"
   ],
   "scripts": {
-    "test": "npm run test --workspaces --if-present",
-    "build": "npm run build --workspaces --if-present",
-    "lint": "npm run lint --workspaces --if-present"
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "dev": "turbo run dev"
   },
   "keywords": [
     "monorepo",
@@ -22,5 +24,8 @@
     "docker"
   ],
   "author": "SANGO RODRIGO",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "turbo": "^2.11.10"
+  }
 }
