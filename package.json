@@ -13,7 +13,11 @@
     "build": "turbo run build",
     "test": "turbo run test",
     "lint": "turbo run lint",
-    "dev": "turbo run dev"
+    "dev": "turbo run dev",
+    "release": "standard-version",
+    "release:patch": "standard-version --release-as patch",
+    "release:minor": "standard-version --release-as minor",
+    "release:major": "standard-version --release-as major"
   },
   "keywords": [
     "monorepo",
@@ -27,6 +31,7 @@
   "author": "SANGO RODRIGO",
   "license": "MIT",
   "devDependencies": {
+    "standard-version": "^9.5.0",
     "turbo": "^2.11.10"
   }
 }
